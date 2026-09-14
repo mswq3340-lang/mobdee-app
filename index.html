@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مُبدع - المعلم الذكية للاختبارات الوطنية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #F8FAF9; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nafesDark: '#004D40',
+                        nafesPrimary: '#00695C',
+                        nafesMedium: '#00897B',
+                        nafesLight: '#E0F2F1',
+                        nafesGreen: '#2E7D32',
+                        nafesPurple: '#5E35B1',
+                        nafesOrange: '#EF6C00'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="text-slate-800" x-data="mobdeApp()">
+
+    <!-- شاشة تسجيل الدخول -->
+    <template x-if="!session.isLoggedIn">
+        <div class="min-h-screen bg-gradient-to-br from-nafesLight via-slate-50 to-purple-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 border border-slate-100">
+                <div class="text-center mb-6">
+                    <h1 class="text-4xl font-black text-nafesDark mb-1">مُـبْـدِع</h1>
+                    <p class="text-xs text-nafesMedium font-semibold">منصة المعلم الذكية للاختبارات الوطنية (نافس)</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1 text-slate-600">الاسم الكامل</label>
+                        <input type="text" x-model="session.name" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-nafesPrimary outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1 text-slate-600">المدرسة / الإدارة</label>
+                        <input type="text" x-model="session.school" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-nafesPrimary outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1 text-slate-600">البريد الإلكتروني</label>
+                        <input type="email" x-model="session.email" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-nafesPrimary outline-none text-sm">
+                    </div>
+                    <button @click="login()" class="w-full bg-nafesPrimary text-white py-3 rounded-xl font-bold hover:bg-nafesDark transition shadow-lg shadow-teal-900/10">
+                        تسجيل الدخول والبدء ✓
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- التطبيق الرئيسي -->
+    <template x-if="session.isLoggedIn">
+        <div class="min-h-screen flex flex-col justify-between">
+            
+            <!-- الشريط العلوي -->
+            <header class="bg-nafesDark text-white px-6 py-4 shadow-md flex justify-between items-center">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-black">؟✓!</span>
+                    <span class="font-black text-lg">منصة مُبدع الوطنية</span>
+                </div>
+                <div class="flex items-center space-x-4 space-x-reverse text-xs">
+                    <span class="bg-teal-800 px-3 py-1 rounded-full" x-text="session.name"></span>
+                    <button @click="logout()" class="text-teal-200 hover:text-white font-bold">خروج</button>
+                </div>
+            </header>
+
+            <!-- المحتوى الديناميكي -->
+            <main class="max-w-4xl w-full mx-auto p-4 flex-grow mb-16">
+                
+                <!-- تبويب توليد الأسئلة -->
+                <div x-show="currentTab === 'generator'" class="space-y-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h2 class="font-bold text-lg text-nafesDark mb-4">توليد بنك أسئلة نافس الوطني</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs font-bold mb-1">المرحلة الدراسية</label>
+                                <select x-model="examForm.grade" class="w-full p-2 border rounded-xl text-sm">
+                                    <option value="ثالث ابتدائي">الصف الثالث الابتدائي</option>
+                                    <option value="سادس ابتدائي">الصف السادس الابتدائي</option>
+                                    <option value="ثالث متوسط">الصف الثالث المتوسط</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">الفصل الدراسي</label>
+                                <select x-model="examForm.semester" class="w-full p-2 border rounded-xl text-sm">
+                                    <option value="الفصل الأول">الفصل الدراسي الأول</option>
+                                    <option value="الفصل الثاني">الفصل الدراسي الثاني</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">المادة</label>
+                                <select x-model="examForm.subject" class="w-full p-2 border rounded-xl text-sm">
+                                    <option value="علوم">علوم</option>
+                                    <option value="لغتي">لغتي</option>
+                                    <option value="رياضيات">رياضيات</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button @click="generateExam()" class="w-full bg-nafesPrimary text-white py-3 rounded-xl font-bold hover:bg-nafesDark transition">
+                            ✨ توليد الأسئلة بمواصفات نافس
+                        </button>
+                    </div>
+
+                    <!-- عرض الاختبار المولّد -->
+                    <template x-if="currentExam">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                            <div class="border-b pb-3 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-nafesDark" x-text="currentExam.title"></h3>
+                                    <span class="text-xs text-slate-500" x-text="currentExam.grade + ' • ' + currentExam.subject"></span>
+                                </div>
+                                <button onclick="window.print()" class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs font-bold hover:bg-slate-200">🖨️ طباعة الاختبار</button>
+                            </div>
+                            
+                            <template x-for="q in currentExam.questions" :key="q.id">
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <div class="font-bold text-xs text-nafesPrimary mb-1" x-text="'سؤال (' + q.number + ') [' + q.type + ']'"></div>
+                                    <div class="text-sm font-medium mb-2" x-text="q.text"></div>
+                                    <div class="space-y-1" x-show="q.options.length > 0">
+                                        <template x-for="opt in q.options">
+                                            <div class="text-xs text-slate-600 bg-white p-2 rounded border" x-text="opt"></div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- تبويب المكتبة والدرجات -->
+                <div x-show="currentTab === 'library'" class="space-y-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h2 class="font-bold text-lg text-nafesDark mb-2">سجل درجات الطلاب والإحصائيات</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-4">
+                            <div class="bg-teal-50 p-4 rounded-xl text-center">
+                                <div class="text-xs text-slate-500">إجمالي الطلاب</div>
+                                <div class="text-xl font-black text-nafesDark" x-text="stats.total"></div>
+                            </div>
+                            <div class="bg-teal-50 p-4 rounded-xl text-center">
+                                <div class="text-xs text-slate-500">المتوسط الحسابي</div>
+                                <div class="text-xl font-black text-nafesDark" x-text="stats.avg"></div>
+                            </div>
+                            <div class="bg-teal-50 p-4 rounded-xl text-center">
+                                <div class="text-xs text-slate-500">نسبة الاجتياز</div>
+                                <div class="text-xl font-black text-nafesGreen" x-text="stats.passRate + '%'"></div>
+                            </div>
+                            <div class="bg-teal-50 p-4 rounded-xl text-center">
+                                <div class="text-xs text-slate-500">أعلى درجة</div>
+                                <div class="text-xl font-black text-nafesPurple" x-text="stats.max"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <table class="w-full text-right border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700 text-xs">
+                                    <th class="p-3">اسم الطالب</th>
+                                    <th class="p-3">رقم الجلوس</th>
+                                    <th class="p-3">الدرجة</th>
+                                    <th class="p-3">النسبة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="grade in studentGrades" :key="grade.id">
+                                    <tr class="border-b hover:bg-slate-50">
+                                        <td class="p-3 font-medium" x-text="grade.name"></td>
+                                        <td class="p-3 text-slate-500" x-text="grade.seat"></td>
+                                        <td class="p-3 font-bold" x-text="grade.score + '/10'"></td>
+                                        <td class="p-3 text-nafesGreen font-bold" x-text="grade.percent + '%'"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- شريط التنقل السفلي -->
+            <nav class="bg-white border-t border-slate-200 fixed bottom-0 left-0 right-0 shadow-lg">
+                <div class="max-w-4xl mx-auto flex justify-around p-2">
+                    <button @click="currentTab = 'generator'" :class="currentTab === 'generator' ? 'text-nafesPrimary font-bold' : 'text-slate-400'" class="flex flex-col items-center text-xs">
+                        <span>📝</span> الأسئلة
+                    </button>
+                    <button @click="currentTab = 'library'" :class="currentTab === 'library' ? 'text-nafesPrimary font-bold' : 'text-slate-400'" class="flex flex-col items-center text-xs">
+                        <span>📊</span> المكتبة والدرجات
+                    </button>
+                </div>
+            </nav>
+
+        </div>
+    </template>
+
+    <script>
+        function mobdeApp() {
+            return {
+                session: { isLoggedIn: false, name: 'أ. أشرف عطية الله الشيخ', school: 'مدارس التميز', email: 'teacher@moe.sa' },
+                currentTab: 'generator',
+                examForm: { grade: 'سادس ابتدائي', semester: 'الفصل الأول', subject: 'علوم' },
+                currentExam: null,
+                studentGrades: [
+                    { id: '1', name: 'عبدالرحمن فهد السبيعي', seat: '101', score: 10, percent: 100 },
+                    { id: '2', name: 'زياد صالح العمري', seat: '102', score: 9, percent: 90 },
+                    { id: '3', name: 'محمد إبراهيم الزهراني', seat: '103', score: 8, percent: 80 }
+                ],
+                stats: { total: 3, avg: 9.0, passRate: 100, max: 10 },
+                login() { this.session.isLoggedIn = true; },
+                logout() { this.session.isLoggedIn = false; },
+                generateExam() {
+                    this.currentExam = {
+                        title: 'اختبار نافس لمادة ' + this.examForm.subject,
+                        grade: this.examForm.grade,
+                        subject: this.examForm.subject,
+                        questions: [
+                            { id: 1, number: 1, type: 'اختيار من متعدد', text: 'ما الوحدة الأساسية المسؤولة عن بناء أجسام الكائنات الحية؟', options: ['أ) الخلية', 'ب) النسيج', 'ج) العضو', 'د) الجهاز'] },
+                            { id: 2, number: 2, type: 'صح وخطأ', text: 'الن النباتات كائنات منتجة تصنع غذاءها بنفسها بعملية البناء الضوئي.', options: ['أ) صح', 'ب) خطأ'] }
+                        ]
+                    };
+                }
+            }
+        }
+    </script>
+</body>
+</html>
