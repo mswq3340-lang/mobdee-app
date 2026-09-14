@@ -1,0 +1,3628 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>منصة مُـبْـدِع | للاختبارات الوطنية نافس</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<style>
+
+:root {
+    --nafes-teal-dark:#004D40;
+    --nafes-teal-primary:#00695C;
+    --nafes-teal-medium:#00897B;
+    --nafes-teal-light:#E0F2F1;
+    --nafes-green:#2E7D32;
+    --nafes-green-light:#E8F5E9;
+    --nafes-purple:#5E35B1;
+    --nafes-purple-light:#EDE7F6;
+    --nafes-orange:#EF6C00;
+    --nafes-orange-light:#FFF3E0;
+    --bg-body:#F4F7F6;
+    --text-dark:#1E293B;
+    --text-gray:#64748B;
+    --card-border:#E2E8F0;
+    --danger:#C62828;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Cairo',system-ui,sans-serif;
+}
+
+body{
+    background:var(--bg-body);
+    color:var(--text-dark);
+    direction:rtl;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+header.app-header{
+    background:linear-gradient(
+        135deg,
+        var(--nafes-teal-dark),
+        var(--nafes-teal-primary)
+    );
+    color:white;
+    padding:12px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 4px 12px rgba(0,77,64,.15);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.brand-container{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand-title{
+    font-size:26px;
+    font-weight:900;
+}
+
+.brand-subtitle{
+    font-size:11px;
+    opacity:.85;
+}
+
+.nafes-logo-badges{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:white;
+    padding:4px 10px;
+    border-radius:20px;
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+
+.badge-icon{
+    width:24px;
+    height:24px;
+    border-radius:6px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:900;
+    font-size:13px;
+}
+
+.badge-purple{background:var(--nafes-purple);}
+.badge-green{background:var(--nafes-green);}
+.badge-orange{background:var(--nafes-orange);}
+
+.nafes-text{
+    color:var(--nafes-teal-dark);
+    font-weight:900;
+    font-size:16px;
+    margin-right:4px;
+}
+
+nav.nav-bar{
+    background:white;
+    border-bottom:1px solid var(--card-border);
+    display:flex;
+    overflow-x:auto;
+    padding:0 16px;
+    gap:8px;
+}
+
+.nav-btn{
+    background:none;
+    border:none;
+    border-bottom:3px solid transparent;
+    padding:12px 18px;
+    font-size:14px;
+    font-weight:700;
+    color:var(--text-gray);
+    cursor:pointer;
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.nav-btn.active{
+    color:var(--nafes-teal-primary);
+    border-bottom-color:var(--nafes-teal-primary);
+}
+
+main.content-area{
+    flex:1;
+    padding:24px;
+    max-width:1200px;
+    margin:0 auto;
+    width:100%;
+}
+
+.tab-section{
+    display:none;
+}
+
+.tab-section.active{
+    display:block;
+    animation:fadeIn .3s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(6px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.card{
+    background:white;
+    border-radius:16px;
+    padding:20px;
+    border:1px solid var(--card-border);
+    box-shadow:0 2px 8px rgba(0,0,0,.03);
+    margin-bottom:20px;
+}
+
+.card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+    border-bottom:1px solid var(--nafes-teal-light);
+    padding-bottom:12px;
+    gap:10px;
+}
+
+.card-title{
+    font-size:18px;
+    font-weight:800;
+    color:var(--nafes-teal-dark);
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:16px;
+    margin-bottom:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-label{
+    font-size:13px;
+    font-weight:700;
+}
+
+.form-control,
+select.form-control{
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid #CBD5E1;
+    font-size:14px;
+    outline:none;
+    background:white;
+}
+
+.form-control:focus{
+    border-color:var(--nafes-teal-primary);
+    box-shadow:0 0 0 3px rgba(0,105,92,.1);
+}
+
+.chip-group{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.chip{
+    padding:8px 14px;
+    border-radius:10px;
+    background:#F1F5F9;
+    border:1.5px solid transparent;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    user-select:none;
+}
+
+.chip.selected{
+    background:var(--nafes-teal-light);
+    border-color:var(--nafes-teal-primary);
+    color:var(--nafes-teal-dark);
+    font-weight:800;
+}
+
+.btn{
+    padding:10px 18px;
+    border-radius:10px;
+    border:none;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:var(--nafes-teal-primary);
+    color:white;
+}
+
+.btn-green{
+    background:var(--nafes-green);
+    color:white;
+}
+
+.btn-outline{
+    background:white;
+    border:1.5px solid #CBD5E1;
+    color:var(--text-dark);
+}
+
+.btn-danger{
+    background:var(--danger);
+    color:white;
+}
+
+.btn-purple{
+    background:var(--nafes-purple);
+    color:white;
+}
+
+.bubble-sheet-container{
+    background:white;
+    border:2px solid var(--nafes-teal-primary);
+    border-radius:14px;
+    padding:20px;
+    max-width:800px;
+    margin:0 auto;
+}
+
+.exam-official-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:2px solid var(--nafes-teal-dark);
+    padding-bottom:12px;
+    margin-bottom:16px;
+    gap:10px;
+}
+
+.bubble-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:6px 12px;
+    border-bottom:1px solid #F1F5F9;
+}
+
+.bubble-circle-group{
+    display:flex;
+    gap:14px;
+}
+
+.bubble-circle{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    border:2px solid #64748B;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    user-select:none;
+    background:white;
+}
+
+.bubble-circle.filled{
+    background:var(--nafes-green);
+    border-color:var(--nafes-green);
+    color:white;
+}
+
+.camera-container{
+    background:#0F172A;
+    border-radius:16px;
+    position:relative;
+    height:440px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    overflow:hidden;
+}
+
+#cameraVideo{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    position:absolute;
+}
+
+.scanner-frame-overlay{
+    width:80%;
+    max-width:400px;
+    height:300px;
+    border:3px solid var(--nafes-green);
+    border-radius:16px;
+    box-shadow:0 0 0 1000px rgba(0,0,0,.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    z-index:2;
+}
+
+.scanner-line{
+    width:100%;
+    height:2px;
+    background:var(--nafes-green);
+    box-shadow:0 0 8px var(--nafes-green);
+    animation:scanAnim 2s infinite ease-in-out;
+}
+
+@keyframes scanAnim{
+    0%{transform:translateY(-140px);}
+    50%{transform:translateY(140px);}
+    100%{transform:translateY(-140px);}
+}
+
+.scanner-controls{
+    position:absolute;
+    bottom:20px;
+    display:flex;
+    gap:12px;
+    z-index:10;
+}
+
+.metrics-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.metric-card{
+    background:white;
+    border-radius:12px;
+    padding:16px;
+    border:1px solid var(--card-border);
+    text-align:center;
+}
+
+.metric-val{
+    font-size:26px;
+    font-weight:900;
+    color:var(--nafes-teal-primary);
+    margin:4px 0;
+}
+
+table.grades-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+table.grades-table th,
+table.grades-table td{
+    padding:10px 14px;
+    text-align:center;
+    border-bottom:1px solid #E2E8F0;
+}
+
+table.grades-table th{
+    background:var(--nafes-teal-light);
+    color:var(--nafes-teal-dark);
+    font-weight:800;
+}
+
+.badge-level{
+    padding:4px 10px;
+    border-radius:12px;
+    font-size:11px;
+    font-weight:800;
+    display:inline-block;
+}
+
+.lvl-adv{
+    background:var(--nafes-green-light);
+    color:var(--nafes-green);
+}
+
+.lvl-prof{
+    background:var(--nafes-teal-light);
+    color:var(--nafes-teal-dark);
+}
+
+.lvl-comp{
+    background:var(--nafes-orange-light);
+    color:var(--nafes-orange);
+}
+
+.lvl-need{
+    background:#FFEBEE;
+    color:#C62828;
+}
+
+/* شاشة التصحيح */
+
+.correction-panel{
+    display:none;
+    border:2px solid var(--nafes-teal-primary);
+    background:#F8FAF9;
+    border-radius:16px;
+    padding:20px;
+    margin-top:20px;
+}
+
+.correction-panel.show{
+    display:block;
+}
+
+.student-identity{
+    background:white;
+    border:2px solid var(--nafes-green);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:20px;
+}
+
+.identity-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+.identity-box{
+    background:#F8FAF9;
+    padding:12px;
+    border-radius:10px;
+}
+
+.identity-label{
+    display:block;
+    font-size:12px;
+    color:var(--text-gray);
+    margin-bottom:4px;
+}
+
+.identity-value{
+    font-size:18px;
+    font-weight:900;
+    color:var(--nafes-teal-dark);
+}
+
+.ocr-status{
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    background:#FFF8E1;
+    color:#795548;
+    font-size:13px;
+    display:none;
+}
+
+.ocr-status.show{
+    display:block;
+}
+
+.correction-score{
+    background:var(--nafes-teal-dark);
+    color:white;
+    border-radius:14px;
+    padding:20px;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.correction-score-number{
+    font-size:42px;
+    font-weight:900;
+}
+
+.answer-review-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:10px;
+}
+
+.answer-review-item{
+    background:white;
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.answer-correct{
+    border-right:5px solid var(--nafes-green);
+}
+
+.answer-wrong{
+    border-right:5px solid var(--danger);
+}
+
+.answer-review-item select{
+    padding:7px;
+    border-radius:8px;
+    border:1px solid #CBD5E1;
+}
+
+.action-area{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:20px;
+    padding-top:20px;
+    border-top:1px solid #CBD5E1;
+}
+
+.saved-key{
+    background:var(--nafes-green-light);
+    color:var(--nafes-green);
+    padding:12px;
+    border-radius:10px;
+    font-weight:800;
+    margin-bottom:15px;
+}
+
+.warning-box{
+    background:#FFF3E0;
+    color:#E65100;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:13px;
+}
+
+.success-box{
+    background:#E8F5E9;
+    color:#2E7D32;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-weight:700;
+}
+
+@media(max-width:700px){
+
+    header.app-header{
+        padding:10px;
+        flex-direction:column;
+        gap:8px;
+        align-items:flex-start;
+    }
+
+    .brand-title{
+        font-size:21px;
+    }
+
+    main.content-area{
+        padding:12px;
+    }
+
+    .card{
+        padding:14px;
+    }
+
+    .exam-official-header{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .bubble-circle-group{
+        gap:6px;
+    }
+
+    .bubble-circle{
+        width:29px;
+        height:29px;
+    }
+
+    .camera-container{
+        height:350px;
+    }
+}
+
+@media print{
+
+    header.app-header,
+    nav.nav-bar,
+    .no-print,
+    .btn{
+        display:none!important;
+    }
+
+    main.content-area{
+        padding:0;
+        max-width:100%;
+    }
+
+    .card{
+        border:none;
+        box-shadow:none;
+        padding:0;
+        margin:0;
+    }
+
+    .correction-panel{
+        display:block!important;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="app-header">
+
+    <div class="brand-container">
+
+        <div class="nafes-logo-badges">
+            <span class="badge-icon badge-purple">؟</span>
+            <span class="badge-icon badge-green">✓</span>
+            <span class="badge-icon badge-orange">!</span>
+            <span class="nafes-text">نَــافِــس</span>
+        </div>
+
+        <div>
+            <div class="brand-title">مُــبْــدِع</div>
+            <div class="brand-subtitle">
+                المنصة الذكية للاختبارات الوطنية
+            </div>
+        </div>
+
+    </div>
+
+    <div style="font-size:13px;">
+        أ. أشرف عطية الله الشيخ (معلم معتمد)
+    </div>
+
+</header>
+
+<nav class="nav-bar no-print">
+
+    <button class="nav-btn active"
+        onclick="switchTab('tab-generator')">
+        ✨ توليد الأسئلة
+    </button>
+
+    <button class="nav-btn"
+        onclick="switchTab('tab-curriculum')">
+        📚 المناهج والمعايير
+    </button>
+
+    <button class="nav-btn"
+        onclick="switchTab('tab-answersheet')">
+        📝 نموذج التظليل
+    </button>
+
+    <button class="nav-btn"
+        onclick="switchTab('tab-scanner')">
+        📷 التصحيح الذكي
+    </button>
+
+    <button class="nav-btn"
+        onclick="switchTab('tab-library')">
+        📂 المكتبة وكشف الدرجات
+    </button>
+
+    <button class="nav-btn"
+        onclick="switchTab('tab-analytics')">
+        📊 تحليل النتائج
+    </button>
+
+</nav>
+
+<main class="content-area">
+
+<!-- ================================================= -->
+<!-- توليد الأسئلة -->
+<!-- ================================================= -->
+
+<section id="tab-generator" class="tab-section active">
+
+<div class="card no-print">
+
+<div class="card-header">
+
+<div class="card-title">
+✨ توليد بنك أسئلة نافس الوطني
+</div>
+
+<span style="font-size:12px;color:var(--text-gray)">
+مطابق لمؤشرات ومعايير نافس
+</span>
+
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label class="form-label">
+١. المرحلة الدراسية:
+</label>
+
+<div class="chip-group">
+
+<div class="chip"
+onclick="selectChip(this,'grade','GRADE_3_ELEM')">
+ثالث ابتدائي
+</div>
+
+<div class="chip selected"
+onclick="selectChip(this,'grade','GRADE_6_ELEM')">
+سادس ابتدائي
+</div>
+
+<div class="chip"
+onclick="selectChip(this,'grade','GRADE_3_INT')">
+ثالث متوسط
+</div>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">
+٢. الفصل الدراسي:
+</label>
+
+<div class="chip-group">
+
+<div class="chip selected"
+onclick="selectChip(this,'sem','SEM_1')">
+الفصل الأول
+</div>
+
+<div class="chip"
+onclick="selectChip(this,'sem','SEM_2')">
+الفصل الثاني
+</div>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">
+٣. المادة:
+</label>
+
+<div class="chip-group">
+
+<div class="chip selected"
+onclick="selectChip(this,'subj','SCIENCE')">
+علوم
+</div>
+
+<div class="chip"
+onclick="selectChip(this,'subj','ARABIC')">
+لغتي
+</div>
+
+<div class="chip"
+onclick="selectChip(this,'subj','MATH')">
+رياضيات
+</div>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">
+٤. عدد الأسئلة:
+</label>
+
+<select class="form-control"
+id="questionCountSelect">
+
+<option value="5">5 أسئلة</option>
+<option value="10" selected>10 أسئلة</option>
+<option value="20">20 سؤالاً</option>
+<option value="50">50 سؤالاً</option>
+<option value="100">100 سؤال</option>
+<option value="1000">1000 سؤال</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="form-group"
+style="margin-bottom:16px">
+
+<label class="form-label">
+٥. أنواع الأسئلة:
+</label>
+
+<div class="chip-group">
+
+<div class="chip selected"
+onclick="this.classList.toggle('selected')">
+✓ اختيار من متعدد
+</div>
+
+<div class="chip selected"
+onclick="this.classList.toggle('selected')">
+✓ صح وخطأ
+</div>
+
+<div class="chip"
+onclick="this.classList.toggle('selected')">
+فراغات
+</div>
+
+<div class="chip"
+onclick="this.classList.toggle('selected')">
+أكمل الجملة
+</div>
+
+<div class="chip"
+onclick="this.classList.toggle('selected')">
+زاوج
+</div>
+
+</div>
+
+</div>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+
+<button class="btn btn-primary"
+onclick="generateQuestions()">
+⚡ توليد الأسئلة
+</button>
+
+<button class="btn btn-outline"
+onclick="window.print()">
+🖨️ طباعة PDF
+</button>
+
+<button class="btn btn-outline"
+onclick="exportDocFile('questionsDoc')">
+📄 تصدير Word
+</button>
+
+<button class="btn btn-green"
+onclick="switchTab('tab-answersheet')">
+🎯 نموذج الإجابة
+</button>
+
+</div>
+
+</div>
+
+<div class="card" id="questionsDoc">
+
+<div class="exam-official-header">
+
+<div>
+
+<strong>
+المملكة العربية السعودية
+</strong>
+
+<br>
+
+<small>
+وزارة التعليم - ورقة اختبار وطني (نافس)
+</small>
+
+<br>
+
+<small id="examMetaHeader">
+مادة العلوم • سادس ابتدائي
+</small>
+
+</div>
+
+<div style="text-align:center">
+
+<div class="nafes-logo-badges">
+
+<span class="badge-icon badge-purple">؟</span>
+<span class="badge-icon badge-green">✓</span>
+<span class="badge-icon badge-orange">!</span>
+
+<span class="nafes-text">
+نَــافِــس
+</span>
+
+</div>
+
+</div>
+
+<div style="text-align:left">
+
+<small>
+الدرجة:
+[
+&nbsp;&nbsp; /
+<span id="maxScoreBadge">10</span>
+]
+</small>
+
+</div>
+
+</div>
+
+<div id="questionsContainer"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- المناهج -->
+<!-- ================================================= -->
+
+<section id="tab-curriculum" class="tab-section">
+
+<div class="card">
+
+<div class="card-header">
+
+<div class="card-title">
+📚 رفع كتب المناهج واستخراج المعايير
+</div>
+
+</div>
+
+<div style="
+border:2px dashed var(--nafes-teal-primary);
+border-radius:12px;
+padding:24px;
+text-align:center;
+background:#F8FAF9;
+margin-bottom:20px;
+">
+
+<p style="font-weight:700">
+ارفع ملف المنهج PDF أو Word أو TXT أو صورة
+</p>
+
+<input
+type="file"
+id="curriculumFileInput"
+style="display:none"
+onchange="handleFileUpload(this)"
+>
+
+<button
+class="btn btn-primary"
+style="margin-top:12px"
+onclick="document.getElementById('curriculumFileInput').click()">
+
+رفع كتاب المادة
+
+</button>
+
+</div>
+
+<div id="standardsContainer"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- نموذج الإجابة -->
+<!-- ================================================= -->
+
+<section id="tab-answersheet" class="tab-section">
+
+<div class="card no-print">
+
+<div class="card-header">
+
+<div class="card-title">
+📝 نموذج التظليل ونموذج الإجابة
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+
+<button
+class="btn btn-green"
+onclick="saveAnswerKey()">
+
+💾 حفظ نموذج الإجابة
+
+</button>
+
+<button
+class="btn btn-primary"
+onclick="window.print()">
+
+🖨️ طباعة
+
+</button>
+
+<button
+class="btn btn-outline"
+onclick="exportDocFile('bubbleSheetDoc')">
+
+📄 Word
+
+</button>
+
+</div>
+
+</div>
+
+<div id="savedKeyStatus"></div>
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label class="form-label">
+حالة النموذج:
+</label>
+
+<select
+class="form-control"
+id="sheetSolvedSelect"
+onchange="renderBubbleSheet()">
+
+<option value="blank">
+ورقة الطالب - فارغة
+</option>
+
+<option value="solved">
+نموذج إجابة محلول
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="bubble-sheet-container"
+id="bubbleSheetDoc">
+
+<div class="exam-official-header">
+
+<div>
+
+<strong>
+وزارة التعليم
+</strong>
+
+<br>
+
+<small>
+ورقة تظليل نافس
+</small>
+
+</div>
+
+<div class="nafes-logo-badges">
+
+<span class="badge-icon badge-purple">؟</span>
+<span class="badge-icon badge-green">✓</span>
+<span class="badge-icon badge-orange">!</span>
+
+<span class="nafes-text">
+نَــافِــس
+</span>
+
+</div>
+
+<div style="font-family:monospace">
+||||||||||||
+</div>
+
+</div>
+
+<div id="bubbleGrid"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- التصحيح الذكي -->
+<!-- ================================================= -->
+
+<section id="tab-scanner" class="tab-section">
+
+<div class="card no-print">
+
+<div class="card-header">
+
+<div class="card-title">
+📷 التصحيح الذكي لورقة الطالب
+</div>
+
+</div>
+
+<div class="saved-key"
+id="scannerKeyStatus">
+
+جارٍ التحقق من نموذج الإجابة...
+
+</div>
+
+<div class="warning-box">
+
+<strong>مهم:</strong>
+يجب أولاً حفظ نموذج الإجابة المحلول.
+بعد ذلك ارفع صورة ورقة الطالب أو استخدم الكاميرا.
+سيتم قراءة الاسم ومحاولة قراءة الورقة، ثم تستطيع
+مراجعة النتيجة قبل اعتمادها.
+
+</div>
+
+<div class="camera-container">
+
+<video
+id="cameraVideo"
+autoplay
+playsinline>
+</video>
+
+<div class="scanner-frame-overlay">
+
+<div class="scanner-line"></div>
+
+</div>
+
+<div class="scanner-controls">
+
+<button
+class="btn btn-green"
+onclick="startCamera()">
+
+📹 تشغيل الكاميرا
+
+</button>
+
+<button
+class="btn btn-primary"
+onclick="captureCameraSheet()">
+
+📸 التقاط الورقة
+
+</button>
+
+</div>
+
+</div>
+
+<br>
+
+<div style="
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+align-items:center;
+">
+
+<input
+type="file"
+id="studentSheetInput"
+accept="image/*"
+style="display:none"
+onchange="processStudentSheet(this.files[0])"
+>
+
+<button
+class="btn btn-purple"
+onclick="document.getElementById('studentSheetInput').click()">
+
+📁 رفع صورة ورقة الطالب
+
+</button>
+
+<button
+class="btn btn-outline"
+onclick="openManualCorrection()">
+
+✏️ إدخال الطالب يدويًا
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- نتيجة التصحيح -->
+
+<div
+class="correction-panel"
+id="correctionPanel">
+
+<div class="card-header">
+
+<div class="card-title">
+🔍 مراجعة نتيجة التصحيح
+</div>
+
+<span>
+قبل اعتماد الدرجة
+</span>
+
+</div>
+
+
+<div class="student-identity">
+
+<div class="identity-grid">
+
+<div class="identity-box">
+
+<span class="identity-label">
+اسم الطالب المقروء
+</span>
+
+<input
+class="form-control"
+id="correctedStudentName"
+value="">
+
+</div>
+
+<div class="identity-box">
+
+<span class="identity-label">
+رقم الجلوس
+</span>
+
+<input
+class="form-control"
+id="correctedStudentSeat"
+value="">
+
+</div>
+
+</div>
+
+<div
+class="ocr-status"
+id="ocrStatus">
+</div>
+
+</div>
+
+
+<div class="correction-score">
+
+<div>
+الدرجة الحالية
+</div>
+
+<div
+class="correction-score-number"
+id="correctionScore">
+
+0 / 0
+
+</div>
+
+<div id="correctionPercent">
+0%
+</div>
+
+</div>
+
+
+<h3 style="
+color:var(--nafes-teal-dark);
+margin-bottom:12px;
+">
+
+مراجعة إجابات الطالب
+
+</h3>
+
+<div
+class="answer-review-grid"
+id="answerReviewGrid">
+</div>
+
+
+<div class="action-area">
+
+<button
+class="btn btn-green"
+onclick="approveCorrection()">
+
+✅ اعتماد الدرجة
+
+</button>
+
+<button
+class="btn btn-primary"
+onclick="enableAnswerEditing()">
+
+✏️ تعديل إجابات الطالب
+
+</button>
+
+<button
+class="btn btn-outline"
+onclick="recalculateCorrection()">
+
+🔄 إعادة التصحيح
+
+</button>
+
+<button
+class="btn btn-danger"
+onclick="cancelCorrection()">
+
+✖ إلغاء
+
+</button>
+
+</div>
+
+</div>
+
+
+<div
+class="card"
+id="scanResultBox"
+style="display:none;border-color:var(--nafes-green)">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+">
+
+<div>
+
+<h3
+id="scannedStudentName"
+style="color:var(--nafes-teal-dark)">
+
+</h3>
+
+<small id="scannedStudentMeta">
+</small>
+
+</div>
+
+<div
+style="
+font-size:24px;
+font-weight:900;
+color:var(--nafes-green)
+"
+id="scannedScoreText">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- المكتبة -->
+<!-- ================================================= -->
+
+<section id="tab-library" class="tab-section">
+
+<div class="card no-print">
+
+<div class="card-header">
+
+<div class="card-title">
+📂 كشف درجات الطلاب والمحفوظات
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+
+<button
+class="btn btn-primary"
+onclick="exportGradesExcel()">
+
+📊 تصدير Excel/CSV
+
+</button>
+
+<button
+class="btn btn-outline"
+onclick="window.print()">
+
+🖨️ طباعة PDF
+
+</button>
+
+</div>
+
+</div>
+
+<div class="metrics-grid">
+
+<div class="metric-card">
+
+<div>
+المجموع الكلي
+</div>
+
+<div
+class="metric-val"
+id="metricTotalStudents">
+0
+</div>
+
+<small>
+طلاب
+</small>
+
+</div>
+
+<div class="metric-card">
+
+<div>
+المتوسط الحسابي
+</div>
+
+<div
+class="metric-val"
+id="metricAverageScore">
+0
+</div>
+
+<small>
+درجات
+</small>
+
+</div>
+
+<div class="metric-card">
+
+<div>
+أعلى درجة
+</div>
+
+<div
+class="metric-val"
+id="metricHighestScore">
+0
+</div>
+
+</div>
+
+<div class="metric-card">
+
+<div>
+نسبة الاجتياز
+</div>
+
+<div
+class="metric-val"
+id="metricPassingRate">
+0%
+</div>
+
+</div>
+
+</div>
+
+<table class="grades-table">
+
+<thead>
+
+<tr>
+
+<th>م</th>
+<th>اسم الطالب</th>
+<th>رقم الجلوس</th>
+<th>الدرجة</th>
+<th>النسبة</th>
+<th>مستوى الأداء</th>
+
+</tr>
+
+</thead>
+
+<tbody
+id="gradesTableBody">
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- التحليل -->
+<!-- ================================================= -->
+
+<section id="tab-analytics" class="tab-section">
+
+<div class="card" id="analyticsDoc">
+
+<div class="card-header">
+
+<div class="card-title">
+📊 تقرير التحليل الإحصائي ومستويات نافس
+</div>
+
+<button
+class="btn btn-primary no-print"
+onclick="window.print()">
+
+🖨️ طباعة PDF
+
+</button>
+
+</div>
+
+<h4 style="
+margin-bottom:12px;
+color:var(--nafes-teal-dark)
+">
+
+تصنيف أداء الطلاب
+
+</h4>
+
+<div style="
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-bottom:20px;
+">
+
+<div>
+
+<div style="
+display:flex;
+justify-content:space-between;
+font-weight:700;
+">
+
+<span style="color:var(--nafes-green)">
+المستوى المتقدم (90% فأعلى)
+</span>
+
+<span id="advCountLabel">
+0 طلاب (0%)
+</span>
+
+</div>
+
+<div style="
+height:8px;
+background:#E2E8F0;
+border-radius:4px;
+overflow:hidden;
+margin-top:4px;
+">
+
+<div
+id="advProgressBar"
+style="
+width:0%;
+height:100%;
+background:var(--nafes-green)
+">
+</div>
+
+</div>
+
+</div>
+
+
+<div>
+
+<div style="
+display:flex;
+justify-content:space-between;
+font-weight:700;
+">
+
+<span style="color:var(--nafes-teal-medium)">
+المستوى المتقن (80% - 89%)
+</span>
+
+<span id="profCountLabel">
+0 طلاب (0%)
+</span>
+
+</div>
+
+<div style="
+height:8px;
+background:#E2E8F0;
+border-radius:4px;
+overflow:hidden;
+margin-top:4px;
+">
+
+<div
+id="profProgressBar"
+style="
+width:0%;
+height:100%;
+background:var(--nafes-teal-medium)
+">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   الحالة العامة
+===================================================== */
+
+const state = {
+
+    selectedGrade:'GRADE_6_ELEM',
+
+    selectedSemester:'SEM_1',
+
+    selectedSubject:'SCIENCE',
+
+    questions:[],
+
+    answerKeys:{},
+
+    savedAnswerKey:null,
+
+    currentStudentAnswers:{},
+
+    currentStudentName:'',
+
+    currentStudentSeat:'',
+
+    editingAnswers:false,
+
+    studentGrades:JSON.parse(
+        localStorage.getItem('mubdi_student_grades') || '[]'
+    ),
+
+    standards:[
+        {
+            code:'SCI-01',
+            title:'الخلايا ودورات الحياة والتركيب الحيوي للكائنات',
+            selected:true
+        },
+        {
+            code:'SCI-02',
+            title:'سلاسل الغذاء والتكيف البيئي وتوازن الأنظمة',
+            selected:true
+        },
+        {
+            code:'SCI-03',
+            title:'حالات المادة والتغيرات الفيزيائية والكيميائية',
+            selected:true
+        }
+    ]
+
+};
+
+
+/* =====================================================
+   التنقل
+===================================================== */
+
+function switchTab(tabId){
+
+    document
+        .querySelectorAll('.tab-section')
+        .forEach(el=>el.classList.remove('active'));
+
+    document
+        .querySelectorAll('.nav-btn')
+        .forEach(el=>el.classList.remove('active'));
+
+    document
+        .getElementById(tabId)
+        .classList.add('active');
+
+    const button = Array
+        .from(document.querySelectorAll('.nav-btn'))
+        .find(b =>
+            b.getAttribute('onclick') &&
+            b.getAttribute('onclick').includes(tabId)
+        );
+
+    if(button){
+        button.classList.add('active');
+    }
+
+    if(tabId==='tab-answersheet'){
+        renderBubbleSheet();
+        updateSavedKeyStatus();
+    }
+
+    if(tabId==='tab-library'){
+        renderGradesTable();
+    }
+
+    if(tabId==='tab-analytics'){
+        renderAnalytics();
+    }
+
+    if(tabId==='tab-scanner'){
+        updateScannerKeyStatus();
+    }
+}
+
+
+/* =====================================================
+   اختيار المرحلة والمادة
+===================================================== */
+
+function selectChip(el,group,val){
+
+    el.parentElement
+        .querySelectorAll('.chip')
+        .forEach(c=>c.classList.remove('selected'));
+
+    el.classList.add('selected');
+
+    if(group==='grade'){
+        state.selectedGrade=val;
+    }
+
+    if(group==='sem'){
+        state.selectedSemester=val;
+    }
+
+    if(group==='subj'){
+        state.selectedSubject=val;
+    }
+}
+
+
+/* =====================================================
+   توليد الأسئلة
+===================================================== */
+
+function generateQuestions(){
+
+    const count =
+        parseInt(
+            document.getElementById('questionCountSelect').value
+        );
+
+    const container =
+        document.getElementById('questionsContainer');
+
+    container.innerHTML='';
+
+    state.questions=[];
+
+    state.answerKeys={};
+
+    const baseSamples=[
+
+        {
+            text:'ما الوحدة الأساسية المسؤولة عن بناء أجسام الكائنات الحية في الطبيعة؟',
+            opts:['أ) الخلية','ب) النسيج','ج) العضو','د) الجهاز'],
+            corr:'أ'
+        },
+
+        {
+            text:'تعتبر النباتات الخضراء كائنات منتجة لأنها تصنع غذاءها بعملية البناء الضوئي.',
+            opts:['أ) صح','ب) خطأ'],
+            corr:'أ'
+        },
+
+        {
+            text:'عملية تحول المادة من الحالة السائلة إلى الغازية تسمى: ...............',
+            opts:[],
+            corr:'التبخر'
+        },
+
+        {
+            text:'أي مما يلي يمثل أحد مكونات النظام البيئي؟',
+            opts:['أ) الكائنات الحية','ب) الصخور فقط','ج) الماء فقط','د) الهواء فقط'],
+            corr:'أ'
+        }
+
+    ];
+
+
+    for(let i=1;i<=count;i++){
+
+        const sample =
+            baseSamples[(i-1)%baseSamples.length];
+
+        state.questions.push({
+
+            num:i,
+
+            text:sample.text,
+
+            opts:sample.opts,
+
+            corr:sample.corr
+
+        });
+
+        state.answerKeys[i]=sample.corr;
+
+        const qDiv =
+            document.createElement('div');
+
+        qDiv.style.padding='12px';
+
+        qDiv.style.borderBottom=
+            '1px solid #E2E8F0';
+
+        qDiv.innerHTML=`
+
+            <strong>(${i})</strong>
+
+            ${sample.text}
+
+            ${
+                sample.opts.length
+                ?
+                '<div style="margin-top:6px;display:flex;gap:16px;flex-wrap:wrap">'
+                +
+                sample.opts
+                    .map(o=>`<span>${o}</span>`)
+                    .join('')
+                +
+                '</div>'
+                :
+                ''
+            }
+
+        `;
+
+        container.appendChild(qDiv);
+
+    }
+
+
+    document
+        .getElementById('maxScoreBadge')
+        .innerText=count;
+
+
+    /*
+       عند توليد أسئلة جديدة نلغي مفتاح الإجابة
+       السابق حتى لا يحدث تصحيح بمفتاح قديم.
+    */
+
+    state.savedAnswerKey=null;
+
+    localStorage.removeItem(
+        'mubdi_saved_answer_key'
+    );
+
+    renderBubbleSheet();
+
+    updateSavedKeyStatus();
+
+    updateScannerKeyStatus();
+
+    alert(
+        `تم توليد ${count} سؤال بنجاح.\n\n` +
+        `الخطوة التالية: افتح "نموذج التظليل"، ` +
+        `اختر "نموذج إجابة محلول"، ثم اضغط "حفظ نموذج الإجابة".`
+    );
+}
+
+
+/* =====================================================
+   نموذج التظليل
+===================================================== */
+
+function renderBubbleSheet(){
+
+    const count =
+        state.questions.length || 10;
+
+    const select =
+        document.getElementById('sheetSolvedSelect');
+
+    const isSolved =
+        select &&
+        select.value==='solved';
+
+    const grid =
+        document.getElementById('bubbleGrid');
+
+    if(!grid)return;
+
+    grid.innerHTML='';
+
+    const opts=['أ','ب','ج','د'];
+
+    for(let i=1;i<=count;i++){
+
+        const row =
+            document.createElement('div');
+
+        row.className='bubble-row';
+
+        const cur =
+            state.answerKeys[i] || 'أ';
+
+        row.innerHTML=`
+
+            <span style="
+                font-weight:700;
+                width:30px;
+            ">
+                ${i}
+            </span>
+
+            <div class="bubble-circle-group">
+
+                ${
+                    opts.map(o=>`
+
+                        <div
+                            class="bubble-circle ${
+                                isSolved &&
+                                String(cur).startsWith(o)
+                                ?
+                                'filled'
+                                :
+                                ''
+                            }"
+                            onclick="
+                                setAnswerKey(${i},'${o}')
+                            "
+                        >
+                            ${o}
+                        </div>
+
+                    `).join('')
+                }
+
+            </div>
+
+        `;
+
+        grid.appendChild(row);
+    }
+
+}
+
+
+/* =====================================================
+   تعديل مفتاح الإجابة
+===================================================== */
+
+function setAnswerKey(questionNumber,answer){
+
+    state.answerKeys[questionNumber]=answer;
+
+    renderBubbleSheet();
+
+}
+
+
+/* =====================================================
+   حفظ نموذج الإجابة
+===================================================== */
+
+function saveAnswerKey(){
+
+    if(!state.questions.length){
+
+        alert(
+            'لا توجد أسئلة حالياً.\nقم بتوليد الاختبار أولاً.'
+        );
+
+        return;
+    }
+
+
+    const key={};
+
+    state.questions.forEach(q=>{
+
+        key[q.num]=
+            state.answerKeys[q.num] || q.corr;
+
+    });
+
+
+    const saved={
+
+        id:Date.now(),
+
+        savedAt:new Date().toISOString(),
+
+        grade:state.selectedGrade,
+
+        semester:state.selectedSemester,
+
+        subject:state.selectedSubject,
+
+        totalQuestions:state.questions.length,
+
+        answers:key
+
+    };
+
+
+    state.savedAnswerKey=saved;
+
+
+    localStorage.setItem(
+        'mubdi_saved_answer_key',
+        JSON.stringify(saved)
+    );
+
+
+    updateSavedKeyStatus();
+
+    updateScannerKeyStatus();
+
+
+    alert(
+        '✅ تم حفظ نموذج الإجابة بنجاح.\n\n' +
+        'يمكنك الآن الانتقال إلى "التصحيح الذكي" ورفع أوراق الطلاب.'
+    );
+
+}
+
+
+/* =====================================================
+   استرجاع نموذج الإجابة
+===================================================== */
+
+function loadSavedAnswerKey(){
+
+    try{
+
+        const raw =
+            localStorage.getItem(
+                'mubdi_saved_answer_key'
+            );
+
+        if(!raw){
+            return null;
+        }
+
+        const saved =
+            JSON.parse(raw);
+
+        state.savedAnswerKey=saved;
+
+        /*
+          نضع المفتاح المحفوظ في الحالة
+          ليصبح هو المرجع الفعلي للتصحيح.
+        */
+
+        if(saved.answers){
+
+            state.answerKeys={
+                ...saved.answers
+            };
+
+        }
+
+        return saved;
+
+    }catch(e){
+
+        console.error(e);
+
+        return null;
+    }
+
+}
+
+
+/* =====================================================
+   حالة المفتاح المحفوظ
+===================================================== */
+
+function updateSavedKeyStatus(){
+
+    const box =
+        document.getElementById('savedKeyStatus');
+
+    if(!box)return;
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+    if(saved){
+
+        const date =
+            new Date(saved.savedAt)
+            .toLocaleString('ar-SA');
+
+        box.innerHTML=`
+
+            <div class="success-box">
+
+                ✅ نموذج الإجابة محفوظ وجاهز للتصحيح
+
+                <br>
+
+                عدد الأسئلة:
+                ${saved.totalQuestions}
+
+                <br>
+
+                تاريخ الحفظ:
+                ${date}
+
+            </div>
+
+        `;
+
+    }else{
+
+        box.innerHTML=`
+
+            <div class="warning-box">
+
+                ⚠️ لم يتم حفظ نموذج إجابة.
+                قم باختيار "نموذج إجابة محلول"
+                ثم اضغط "حفظ نموذج الإجابة".
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   حالة المصحح
+===================================================== */
+
+function updateScannerKeyStatus(){
+
+    const box =
+        document.getElementById('scannerKeyStatus');
+
+    if(!box)return;
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+    if(saved){
+
+        box.className='saved-key';
+
+        box.innerHTML=`
+
+            ✅ نموذج الإجابة جاهز
+
+            <br>
+
+            عدد الأسئلة:
+            ${saved.totalQuestions}
+
+            <br>
+
+            سيتم استخدامه كمفتاح التصحيح.
+
+        `;
+
+    }else{
+
+        box.className='warning-box';
+
+        box.innerHTML=`
+
+            ⚠️ لا يوجد نموذج إجابة محفوظ.
+
+            <br>
+
+            ارجع إلى "نموذج التظليل"
+            واحفظ نموذج الإجابة أولاً.
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   الكاميرا
+===================================================== */
+
+let cameraStream=null;
+
+
+async function startCamera(){
+
+    try{
+
+        cameraStream =
+            await navigator.mediaDevices.getUserMedia({
+
+                video:{
+                    facingMode:'environment'
+                }
+
+            });
+
+
+        document
+            .getElementById('cameraVideo')
+            .srcObject=cameraStream;
+
+
+    }catch(e){
+
+        alert(
+            'تعذر الوصول إلى الكاميرا.\n' +
+            'يمكنك بدلاً من ذلك رفع صورة ورقة الطالب.'
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   التقاط صورة من الكاميرا
+===================================================== */
+
+function captureCameraSheet(){
+
+    const video =
+        document.getElementById('cameraVideo');
+
+    if(!video.srcObject){
+
+        alert(
+            'شغّل الكاميرا أولاً.'
+        );
+
+        return;
+    }
+
+
+    const canvas =
+        document.createElement('canvas');
+
+    canvas.width=video.videoWidth || 1200;
+
+    canvas.height=video.videoHeight || 1600;
+
+
+    const ctx =
+        canvas.getContext('2d');
+
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    canvas.toBlob(
+        blob=>{
+
+            processStudentSheet(blob);
+
+        },
+        'image/jpeg',
+        .92
+    );
+
+}
+
+
+/* =====================================================
+   معالجة ورقة الطالب
+===================================================== */
+
+async function processStudentSheet(file){
+
+    if(!file){
+
+        return;
+    }
+
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+
+    if(!saved){
+
+        alert(
+            'لا يمكن تصحيح الورقة.\n\n' +
+            'يجب حفظ نموذج الإجابة المحلول أولاً.'
+        );
+
+        return;
+    }
+
+
+    const panel =
+        document.getElementById('correctionPanel');
+
+    panel.classList.add('show');
+
+
+    const status =
+        document.getElementById('ocrStatus');
+
+
+    status.classList.add('show');
+
+    status.innerHTML=
+        '⏳ جارٍ تحليل ورقة الطالب ومحاولة قراءة الاسم...';
+
+
+    /*
+       محاولة OCR.
+       يتم استخدام العربية والإنجليزية عند الإمكان.
+    */
+
+    let detectedText='';
+
+
+    try{
+
+        const result =
+            await Tesseract.recognize(
+
+                file,
+
+                'ara+eng',
+
+                {
+
+                    logger:m=>{
+
+                        if(m.status==='recognizing text'){
+
+                            const percent =
+                                Math.round(
+                                    (m.progress || 0)*100
+                                );
+
+                            status.innerHTML=
+                                `⏳ جارٍ قراءة الورقة... ${percent}%`;
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+
+        detectedText =
+            result.data.text || '';
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.innerHTML=
+            '⚠️ تعذر تشغيل القراءة الآلية. يمكنك إدخال اسم الطالب يدوياً.';
+
+    }
+
+
+    /*
+       محاولة استخراج اسم الطالب.
+       لأن الكتابة اليدوية قد تكون غير واضحة،
+       يتم عرض النص للمراجعة وليس اعتماده مباشرة.
+    */
+
+    const extractedName =
+        extractStudentName(detectedText);
+
+
+    document
+        .getElementById('correctedStudentName')
+        .value =
+            extractedName ||
+            '';
+
+
+    state.currentStudentName =
+        extractedName || '';
+
+
+    state.currentStudentSeat='';
+
+
+    /*
+       لا نخمن الإجابات من الصورة بشكل خطير.
+       ننشئ منطقة مراجعة يمكن للمعلم تعديلها.
+    */
+
+    initializeStudentAnswers();
+
+
+    recalculateCorrection();
+
+
+    if(extractedName){
+
+        status.innerHTML=`
+
+            ✅ تم العثور على نص يبدو أنه اسم الطالب.
+
+            <br>
+
+            <strong>
+            راجع الاسم قبل اعتماد الدرجة:
+            </strong>
+
+            <br>
+
+            ${escapeHTML(extractedName)}
+
+            <br>
+
+            <small>
+            إذا كانت الكتابة اليدوية غير واضحة،
+            يمكنك تعديل الاسم يدوياً.
+            </small>
+
+        `;
+
+    }else{
+
+        status.innerHTML=`
+
+            ⚠️ لم يتمكن النظام من قراءة اسم الطالب
+            بشكل موثوق.
+
+            <br>
+
+            يرجى كتابة اسم الطالب يدوياً قبل اعتماد الدرجة.
+
+        `;
+
+    }
+
+
+    document
+        .getElementById('scannedStudentName')
+        .innerText =
+            extractedName ||
+            'لم يتم التعرف على الاسم';
+
+
+    document
+        .getElementById('scannedStudentMeta')
+        .innerText =
+            'تم تحليل الورقة - يرجى مراجعة البيانات قبل الاعتماد';
+
+}
+
+
+/* =====================================================
+   استخراج اسم الطالب من OCR
+===================================================== */
+
+function extractStudentName(text){
+
+    if(!text){
+        return '';
+    }
+
+
+    const lines =
+        text
+        .split(/\r?\n/)
+        .map(x=>x.trim())
+        .filter(Boolean);
+
+
+    /*
+       البحث عن سطر يحتوي على:
+       اسم الطالب / الطالب / الاسم
+    */
+
+    for(let i=0;i<lines.length;i++){
+
+        const line=lines[i];
+
+        if(
+            /اسم\s*الطالب/.test(line) ||
+            /اسم الطالب/.test(line) ||
+            /^الاسم/.test(line)
+        ){
+
+            let value =
+                line
+                .replace(/اسم\s*الطالب\s*[:：\-]*/g,'')
+                .replace(/^الاسم\s*[:：\-]*/g,'')
+
+                .trim();
+
+
+            if(value.length>2){
+                return value;
+            }
+
+
+            if(lines[i+1]){
+                return lines[i+1].trim();
+            }
+
+        }
+
+    }
+
+
+    /*
+       إذا لم يوجد عنوان واضح،
+       نستخدم أول سطر عربي معقول كاقتراح.
+    */
+
+    const candidate =
+        lines.find(line =>
+            /[\u0600-\u06FF]{3,}/.test(line)
+        );
+
+
+    return candidate || '';
+
+}
+
+
+/* =====================================================
+   إنشاء إجابات الطالب
+===================================================== */
+
+function initializeStudentAnswers(){
+
+    state.currentStudentAnswers={};
+
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+
+    if(!saved)return;
+
+
+    for(let i=1;i<=saved.totalQuestions;i++){
+
+        /*
+           في البداية نضع إجابة فارغة.
+           يستطيع المعلم اختيار الإجابات التي
+           ظهرت في ورقة الطالب.
+        */
+
+        state.currentStudentAnswers[i]='';
+
+    }
+
+
+    state.editingAnswers=true;
+
+
+    renderAnswerReview();
+
+}
+
+
+/* =====================================================
+   عرض إجابات الطالب
+===================================================== */
+
+function renderAnswerReview(){
+
+    const container =
+        document.getElementById('answerReviewGrid');
+
+    if(!container)return;
+
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+
+    if(!saved)return;
+
+
+    container.innerHTML='';
+
+
+    for(let i=1;i<=saved.totalQuestions;i++){
+
+        const studentAnswer =
+            state.currentStudentAnswers[i] || '';
+
+
+        const correctAnswer =
+            saved.answers[i];
+
+
+        const isCorrect =
+            studentAnswer &&
+            String(studentAnswer)
+                .startsWith(
+                    String(correctAnswer)
+                );
+
+
+        const div =
+            document.createElement('div');
+
+
+        div.className=
+            'answer-review-item ' +
+            (
+                studentAnswer
+                ?
+                (
+                    isCorrect
+                    ?
+                    'answer-correct'
+                    :
+                    'answer-wrong'
+                )
+                :
+                ''
+            );
+
+
+        div.innerHTML=`
+
+            <div>
+
+                <strong>
+                السؤال ${i}
+                </strong>
+
+                <br>
+
+                <small>
+                الإجابة الصحيحة:
+                ${escapeHTML(correctAnswer)}
+                </small>
+
+            </div>
+
+            <select
+                onchange="
+                    changeStudentAnswer(
+                        ${i},
+                        this.value
+                    )
+                "
+            >
+
+                <option value="">
+                    لم يتم تحديد
+                </option>
+
+                <option value="أ"
+                    ${studentAnswer==='أ'?'selected':''}>
+                    أ
+                </option>
+
+                <option value="ب"
+                    ${studentAnswer==='ب'?'selected':''}>
+                    ب
+                </option>
+
+                <option value="ج"
+                    ${studentAnswer==='ج'?'selected':''}>
+                    ج
+                </option>
+
+                <option value="د"
+                    ${studentAnswer==='د'?'selected':''}>
+                    د
+                </option>
+
+            </select>
+
+        `;
+
+
+        container.appendChild(div);
+
+    }
+
+}
+
+
+/* =====================================================
+   تعديل إجابة طالب
+===================================================== */
+
+function changeStudentAnswer(questionNumber,answer){
+
+    state.currentStudentAnswers[questionNumber]=answer;
+
+    recalculateCorrection();
+
+}
+
+
+/* =====================================================
+   إعادة حساب الدرجة
+===================================================== */
+
+function recalculateCorrection(){
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+
+    if(!saved)return;
+
+
+    let correct=0;
+
+
+    for(let i=1;i<=saved.totalQuestions;i++){
+
+        const student =
+            state.currentStudentAnswers[i];
+
+        const key =
+            saved.answers[i];
+
+
+        if(
+            student &&
+            String(student)
+                .startsWith(
+                    String(key)
+                )
+        ){
+
+            correct++;
+
+        }
+
+    }
+
+
+    const total =
+        saved.totalQuestions;
+
+
+    const percent =
+        total
+        ?
+        Math.round(
+            (correct/total)*100
+        )
+        :
+        0;
+
+
+    document
+        .getElementById('correctionScore')
+        .innerText =
+            `${correct} / ${total}`;
+
+
+    document
+        .getElementById('correctionPercent')
+        .innerText =
+            `${percent}%`;
+
+
+    renderAnswerReview();
+
+
+    return {
+
+        correct,
+        total,
+        percent
+
+    };
+
+}
+
+
+/* =====================================================
+   تفعيل تعديل الإجابات
+===================================================== */
+
+function enableAnswerEditing(){
+
+    state.editingAnswers=true;
+
+    renderAnswerReview();
+
+    alert(
+        '✏️ يمكنك الآن تعديل إجابات الطالب من القوائم أمام كل سؤال.'
+    );
+
+}
+
+
+/* =====================================================
+   اعتماد الدرجة
+===================================================== */
+
+function approveCorrection(){
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+
+    if(!saved){
+
+        alert(
+            'لا يوجد نموذج إجابة محفوظ.'
+        );
+
+        return;
+    }
+
+
+    const name =
+        document
+            .getElementById('correctedStudentName')
+            .value
+            .trim();
+
+
+    const seat =
+        document
+            .getElementById('correctedStudentSeat')
+            .value
+            .trim();
+
+
+    if(!name){
+
+        alert(
+            'يرجى التأكد من اسم الطالب قبل اعتماد الدرجة.'
+        );
+
+        document
+            .getElementById('correctedStudentName')
+            .focus();
+
+        return;
+    }
+
+
+    const result =
+        recalculateCorrection();
+
+
+    const grade={
+
+        id:Date.now().toString(),
+
+        name:name,
+
+        seat:seat || '-',
+
+        score:result.correct,
+
+        maxScore:result.total,
+
+        percent:result.percent,
+
+        approved:true,
+
+        approvedAt:new Date().toISOString()
+
+    };
+
+
+    state.studentGrades.unshift(grade);
+
+
+    localStorage.setItem(
+        'mubdi_student_grades',
+        JSON.stringify(
+            state.studentGrades
+        )
+    );
+
+
+    document
+        .getElementById('scanResultBox')
+        .style.display='block';
+
+
+    document
+        .getElementById('scannedStudentName')
+        .innerText=name;
+
+
+    document
+        .getElementById('scannedStudentMeta')
+        .innerText =
+            `رقم الجلوس: ${seat || '-'} • تم اعتماد الدرجة ✓`;
+
+
+    document
+        .getElementById('scannedScoreText')
+        .innerText =
+            `${result.correct} / ${result.total}`;
+
+
+    alert(
+        `✅ تم اعتماد درجة الطالب ${name}\n\n` +
+        `الدرجة: ${result.correct}/${result.total}\n` +
+        `النسبة: ${result.percent}%`
+    );
+
+
+    renderGradesTable();
+
+    renderAnalytics();
+
+}
+
+
+/* =====================================================
+   إلغاء التصحيح
+===================================================== */
+
+function cancelCorrection(){
+
+    document
+        .getElementById('correctionPanel')
+        .classList.remove('show');
+
+}
+
+
+/* =====================================================
+   الإدخال اليدوي
+===================================================== */
+
+function openManualCorrection(){
+
+    const saved =
+        state.savedAnswerKey ||
+        loadSavedAnswerKey();
+
+
+    if(!saved){
+
+        alert(
+            'احفظ نموذج الإجابة أولاً.'
+        );
+
+        return;
+    }
+
+
+    document
+        .getElementById('correctionPanel')
+        .classList.add('show');
+
+
+    state.currentStudentName='';
+
+    state.currentStudentSeat='';
+
+
+    document
+        .getElementById('correctedStudentName')
+        .value='';
+
+
+    document
+        .getElementById('correctedStudentSeat')
+        .value='';
+
+
+    initializeStudentAnswers();
+
+    recalculateCorrection();
+
+
+    document
+        .getElementById('ocrStatus')
+        .classList.remove('show');
+
+}
+
+
+/* =====================================================
+   جدول الدرجات
+===================================================== */
+
+function renderGradesTable(){
+
+    const tbody =
+        document.getElementById('gradesTableBody');
+
+    if(!tbody)return;
+
+
+    tbody.innerHTML='';
+
+
+    let sum=0;
+
+    let highest=0;
+
+    let passed=0;
+
+
+    state.studentGrades.forEach(
+        (g,idx)=>{
+
+            sum+=Number(g.score);
+
+            if(
+                Number(g.score)>highest
+            ){
+
+                highest=
+                    Number(g.score);
+
+            }
+
+
+            if(
+                Number(g.percent)>=50
+            ){
+
+                passed++;
+
+            }
+
+
+            let level='متقن';
+
+            let cls='lvl-prof';
+
+
+            if(g.percent>=90){
+
+                level='متقدم';
+
+                cls='lvl-adv';
+
+            }else if(g.percent>=80){
+
+                level='متقن';
+
+                cls='lvl-prof';
+
+            }else if(g.percent>=60){
+
+                level='مقبول';
+
+                cls='lvl-comp';
+
+            }else{
+
+                level='يحتاج دعم';
+
+                cls='lvl-need';
+
+            }
+
+
+            const tr =
+                document.createElement('tr');
+
+
+            tr.innerHTML=`
+
+                <td>${idx+1}</td>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(g.name)}
+                    </strong>
+                </td>
+
+                <td>
+                    ${escapeHTML(g.seat || '-')}
+                </td>
+
+                <td>
+                    ${g.score}/${g.maxScore}
+                </td>
+
+                <td>
+                    ${g.percent}%
+                </td>
+
+                <td>
+                    <span class="badge-level ${cls}">
+                        ${level}
+                    </span>
+                </td>
+
+            `;
+
+
+            tbody.appendChild(tr);
+
+        }
+    );
+
+
+    const total =
+        state.studentGrades.length;
+
+
+    const average =
+        total
+        ?
+        (sum/total).toFixed(1)
+        :
+        '0';
+
+
+    const passingRate =
+        total
+        ?
+        Math.round(
+            (passed/total)*100
+        )
+        :
+        0;
+
+
+    document
+        .getElementById('metricTotalStudents')
+        .innerText=total;
+
+
+    document
+        .getElementById('metricAverageScore')
+        .innerText=average;
+
+
+    document
+        .getElementById('metricHighestScore')
+        .innerText=highest;
+
+
+    document
+        .getElementById('metricPassingRate')
+        .innerText=
+            passingRate+'%';
+
+}
+
+
+/* =====================================================
+   التحليل
+===================================================== */
+
+function renderAnalytics(){
+
+    const total =
+        state.studentGrades.length;
+
+
+    if(!total){
+
+        document
+            .getElementById('advCountLabel')
+            .innerText='0 طلاب (0%)';
+
+        document
+            .getElementById('profCountLabel')
+            .innerText='0 طلاب (0%)';
+
+        document
+            .getElementById('advProgressBar')
+            .style.width='0%';
+
+        document
+            .getElementById('profProgressBar')
+            .style.width='0%';
+
+        return;
+    }
+
+
+    const adv =
+        state.studentGrades
+            .filter(
+                g=>g.percent>=90
+            )
+            .length;
+
+
+    const prof =
+        state.studentGrades
+            .filter(
+                g=>
+                    g.percent>=80 &&
+                    g.percent<90
+            )
+            .length;
+
+
+    const advP =
+        Math.round(
+            (adv/total)*100
+        );
+
+
+    const profP =
+        Math.round(
+            (prof/total)*100
+        );
+
+
+    document
+        .getElementById('advCountLabel')
+        .innerText =
+            `${adv} طلاب (${advP}%)`;
+
+
+    document
+        .getElementById('profCountLabel')
+        .innerText =
+            `${prof} طلاب (${profP}%)`;
+
+
+    document
+        .getElementById('advProgressBar')
+        .style.width=
+            advP+'%';
+
+
+    document
+        .getElementById('profProgressBar')
+        .style.width=
+            profP+'%';
+
+}
+
+
+/* =====================================================
+   تصدير Word
+===================================================== */
+
+function exportDocFile(id){
+
+    const element =
+        document.getElementById(id);
+
+
+    if(!element)return;
+
+
+    const content =
+        element.innerHTML;
+
+
+    const blob =
+        new Blob(
+
+            [
+                '\ufeff' +
+
+                `<html dir="rtl">
+                <head>
+                <meta charset="utf-8">
+                </head>
+                <body>
+                ${content}
+                </body>
+                </html>`
+
+            ],
+
+            {
+                type:'application/msword'
+            }
+
+        );
+
+
+    const link =
+        document.createElement('a');
+
+
+    link.href =
+        URL.createObjectURL(blob);
+
+
+    link.download =
+        `مستند_مبدع_${Date.now()}.doc`;
+
+
+    link.click();
+
+}
+
+
+/* =====================================================
+   تصدير Excel / CSV
+===================================================== */
+
+function exportGradesExcel(){
+
+    let csv =
+        '\ufeffم,اسم الطالب,رقم الجلوس,الدرجة,النسبة,التقدير\n';
+
+
+    state.studentGrades.forEach(
+        (g,i)=>{
+
+            let level='متقن';
+
+
+            if(g.percent>=90){
+
+                level='متقدم';
+
+            }else if(g.percent>=80){
+
+                level='متقن';
+
+            }else if(g.percent>=60){
+
+                level='مقبول';
+
+            }else{
+
+                level='يحتاج دعم';
+
+            }
+
+
+            csv +=
+                `${i+1},"${escapeCSV(g.name)}",` +
+                `"${escapeCSV(g.seat || '-')}",` +
+                `${g.score}/${g.maxScore},` +
+                `${g.percent}%,"${level}"\n`;
+
+        }
+    );
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type:'text/csv;charset=utf-8;'
+            }
+        );
+
+
+    const link =
+        document.createElement('a');
+
+
+    link.href =
+        URL.createObjectURL(blob);
+
+
+    link.download =
+        `كشف_درجات_مبدع_${Date.now()}.csv`;
+
+
+    link.click();
+
+}
+
+
+/* =====================================================
+   رفع المنهج
+===================================================== */
+
+function handleFileUpload(input){
+
+    if(
+        input.files &&
+        input.files[0]
+    ){
+
+        alert(
+            `✓ تم استلام الملف:\n${input.files[0].name}\n\n` +
+            `يمكن ربط استخراج المعايير لاحقاً بمحرك ذكاء اصطناعي.`
+        );
+
+        renderStandards();
+
+    }
+
+}
+
+
+/* =====================================================
+   المعايير
+===================================================== */
+
+function renderStandards(){
+
+    document
+        .getElementById('standardsContainer')
+        .innerHTML =
+
+        state.standards
+            .map(
+                s=>`
+
+                <div style="
+                    padding:8px;
+                    background:#F8FAF9;
+                    border-radius:6px;
+                    margin-bottom:6px;
+                ">
+
+                    <input
+                        type="checkbox"
+                        checked
+                    >
+
+                    <strong>
+                        [${s.code}]
+                    </strong>
+
+                    ${escapeHTML(s.title)}
+
+                </div>
+
+                `
+            )
+            .join('');
+
+}
+
+
+/* =====================================================
+   حماية النصوص
+===================================================== */
+
+function escapeHTML(value){
+
+    return String(value ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+
+}
+
+
+function escapeCSV(value){
+
+    return String(value ?? '')
+        .replace(/"/g,'""');
+
+}
+
+
+/* =====================================================
+   بدء التطبيق
+===================================================== */
+
+window.addEventListener(
+    'DOMContentLoaded',
+    ()=>{
+
+        loadSavedAnswerKey();
+
+        generateQuestions();
+
+        /*
+           إذا كان هناك مفتاح محفوظ سابقاً،
+           نعيد تحميله بعد التوليد.
+        */
+
+        const saved =
+            loadSavedAnswerKey();
+
+
+        if(saved){
+
+            state.savedAnswerKey=saved;
+
+            state.answerKeys={
+                ...saved.answers
+            };
+
+        }
+
+
+        renderStandards();
+
+        renderBubbleSheet();
+
+        renderGradesTable();
+
+        renderAnalytics();
+
+        updateSavedKeyStatus();
+
+        updateScannerKeyStatus();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
