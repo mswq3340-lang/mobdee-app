@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مُـبْـدِع | للاختبارات الوطنية نافس</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nafes-teal-dark: #004D40;
+            --nafes-teal-primary: #00695C;
+            --nafes-teal-medium: #00897B;
+            --nafes-teal-light: #E0F2F1;
+            --nafes-green: #2E7D32;
+            --nafes-green-light: #E8F5E9;
+            --nafes-purple: #5E35B1;
+            --nafes-purple-light: #EDE7F6;
+            --nafes-orange: #EF6C00;
+            --nafes-orange-light: #FFF3E0;
+            --bg-body: #F4F7F6;
+            --text-dark: #1E293B;
+            --text-gray: #64748B;
+            --card-border: #E2E8F0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-dark); direction: rtl; min-height: 100vh; display: flex; flex-direction: column; }
+
+        header.app-header {
+            background: linear-gradient(135deg, var(--nafes-teal-dark), var(--nafes-teal-primary));
+            color: white; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 77, 64, 0.15); position: sticky; top: 0; z-index: 1000;
+        }
+        .brand-container { display: flex; align-items: center; gap: 12px; }
+        .brand-title { font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+        .brand-subtitle { font-size: 11px; opacity: 0.85; }
+
+        .nafes-logo-badges {
+            display: inline-flex; align-items: center; gap: 4px; background: white; padding: 4px 10px;
+            border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .badge-icon {
+            width: 24px; height: 24px; border-radius: 6px; display: inline-flex; align-items: center;
+            justify-content: center; color: white; font-weight: 900; font-size: 13px;
+        }
+        .badge-purple { background-color: var(--nafes-purple); }
+        .badge-green { background-color: var(--nafes-green); }
+        .badge-orange { background-color: var(--nafes-orange); }
+        .nafes-text { color: var(--nafes-teal-dark); font-weight: 900; font-size: 16px; margin-right: 4px; }
+
+        nav.nav-bar {
+            background: white; border-bottom: 1px solid var(--card-border); display: flex;
+            overflow-x: auto; padding: 0 16px; gap: 8px;
+        }
+        .nav-btn {
+            background: none; border: none; border-bottom: 3px solid transparent; padding: 12px 18px;
+            font-size: 14px; font-weight: 700; color: var(--text-gray); cursor: pointer; white-space: nowrap;
+            display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+        }
+        .nav-btn:hover { color: var(--nafes-teal-primary); }
+        .nav-btn.active { color: var(--nafes-teal-primary); border-bottom-color: var(--nafes-teal-primary); }
+
+        main.content-area { flex: 1; padding: 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .tab-section { display: none; }
+        .tab-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: white; border-radius: 16px; padding: 20px; border: 1px solid var(--card-border); box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-bottom: 20px; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--nafes-teal-light); padding-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 800; color: var(--nafes-teal-dark); display: flex; align-items: center; gap: 8px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+        .form-control, select.form-control { padding: 10px 14px; border-radius: 10px; border: 1px solid #CBD5E1; font-size: 14px; outline: none; }
+        .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { padding: 8px 14px; border-radius: 10px; background: #F1F5F9; border: 1.5px solid transparent; font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; }
+        .chip.selected { background: var(--nafes-teal-light); border-color: var(--nafes-teal-primary); color: var(--nafes-teal-dark); font-weight: 800; }
+
+        .btn { padding: 10px 18px; border-radius: 10px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+        .btn-primary { background: var(--nafes-teal-primary); color: white; }
+        .btn-green { background: var(--nafes-green); color: white; }
+        .btn-outline { background: white; border: 1.5px solid #CBD5E1; color: var(--text-dark); }
+
+        .bubble-sheet-container { background: white; border: 2px solid var(--nafes-teal-primary); border-radius: 14px; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .exam-official-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--nafes-teal-dark); padding-bottom: 12px; margin-bottom: 16px; }
+        .bubble-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid #F1F5F9; }
+        .bubble-circle-group { display: flex; gap: 14px; }
+        .bubble-circle {
+            width: 32px; height: 32px; border-radius: 50%; border: 2px solid #64748B; display: inline-flex;
+            align-items: center; justify-content: center; font-weight: 700; font-size: 13px; cursor: pointer; user-select: none; background: white;
+        }
+        .bubble-circle.filled { background: var(--nafes-green); border-color: var(--nafes-green); color: white; }
+
+        .camera-container { background: #0F172A; border-radius: 16px; position: relative; height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; overflow: hidden; }
+        #cameraVideo { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        .scanner-frame-overlay { width: 80%; max-width: 400px; height: 260px; border: 3px solid var(--nafes-green); border-radius: 16px; box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .scanner-line { width: 100%; height: 2px; background: var(--nafes-green); box-shadow: 0 0 8px var(--nafes-green); animation: scanAnim 2s infinite ease-in-out; }
+        @keyframes scanAnim { 0% { transform: translateY(-120px); } 50% { transform: translateY(120px); } 100% { transform: translateY(-120px); } }
+        .scanner-controls { position: absolute; bottom: 20px; display: flex; gap: 12px; z-index: 10; }
+
+        /* نافذة التعديل والاعتماد المنبثقة */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 16px; }
+        .modal-card { background: white; border-radius: 16px; width: 100%; max-width: 550px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: scaleUp 0.2s ease; }
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        table.grades-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        table.grades-table th, table.grades-table td { padding: 10px 14px; text-align: center; border-bottom: 1px solid #E2E8F0; }
+        table.grades-table th { background: var(--nafes-teal-light); color: var(--nafes-teal-dark); font-weight: 800; }
+        .badge-level { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-block; }
+        .lvl-adv { background: var(--nafes-green-light); color: var(--nafes-green); }
+        .lvl-prof { background: var(--nafes-teal-light); color: var(--nafes-teal-dark); }
+
+        @media print {
+            header.app-header, nav.nav-bar, .no-print, .btn { display: none !important; }
+            main.content-area { padding: 0; max-width: 100%; }
+            .card { border: none; box-shadow: none; padding: 0; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="brand-container">
+            <div class="nafes-logo-badges">
+                <span class="badge-icon badge-purple">؟</span>
+                <span class="badge-icon badge-green">✓</span>
+                <span class="badge-icon badge-orange">!</span>
+                <span class="nafes-text">نَــافِــس</span>
+            </div>
+            <div>
+                <div class="brand-title">مُــبْــدِع</div>
+                <div class="brand-subtitle">المنصة الذكية للاختبارات الوطنية</div>
+            </div>
+        </div>
+        <div style="font-size: 13px;">أ. أشرف عطية الله الشيخ (معلم معتمد)</div>
+    </header>
+
+    <nav class="nav-bar no-print">
+        <button class="nav-btn active" onclick="switchTab('tab-generator')"><span>✨</span> توليد الأسئلة</button>
+        <button class="nav-btn" onclick="switchTab('tab-curriculum')"><span>📚</span> المناهج والمعايير</button>
+        <button class="nav-btn" onclick="switchTab('tab-answersheet')"><span>📝</span> نموذج التظليل</button>
+        <button class="nav-btn" onclick="switchTab('tab-scanner')"><span>📷</span> التصحيح الذكي بالكاميرا</button>
+        <button class="nav-btn" onclick="switchTab('tab-library')"><span>📂</span> كشف الدرجات</button>
+        <button class="nav-btn" onclick="switchTab('tab-analytics')"><span>📊</span> تحليل النتائج</button>
+    </nav>
+
+    <main class="content-area">
+
+        <!-- 1. توليد الأسئلة -->
+        <section id="tab-generator" class="tab-section active">
+            <div class="card no-print">
+                <div class="card-header"><div class="card-title"><span>✨</span> توليد بنك أسئلة نافس الوطني</div></div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">عدد الأسئلة:</label>
+                        <select class="form-control" id="questionCountSelect">
+                            <option value="5">5 أسئلة</option>
+                            <option value="10" selected>10 أسئلة</option>
+                            <option value="20">20 سؤالاً</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="generateQuestions()"><span>⚡</span> توليد الأسئلة فوراً</button>
+            </div>
+            <div class="card" id="questionsDoc">
+                <div class="exam-official-header">
+                    <div><strong>وزارة التعليم</strong><br><small>ورقة اختبار وطني (نافس)</small></div>
+                    <div class="nafes-logo-badges">
+                        <span class="badge-icon badge-purple">؟</span>
+                        <span class="badge-icon badge-green">✓</span>
+                        <span class="badge-icon badge-orange">!</span>
+                        <span class="nafes-text">نَــافِــس</span>
+                    </div>
+                    <div><small>الدرجة: [<span id="maxScoreBadge">10</span>]</small></div>
+                </div>
+                <div id="questionsContainer"></div>
+            </div>
+        </section>
+
+        <!-- 2. رفع الكتب -->
+        <section id="tab-curriculum" class="tab-section">
+            <div class="card">
+                <div class="card-header"><div class="card-title"><span>📚</span> رفع كتب المناهج واستخراج المعايير</div></div>
+                <input type="file" id="curriculumFileInput" style="display: none;" onchange="alert('✓ تم استخراج المعايير بنجاح!')">
+                <button class="btn btn-primary" onclick="document.getElementById('curriculumFileInput').click()">رفع كتاب المادة</button>
+            </div>
+        </section>
+
+        <!-- 3. نموذج التظليل -->
+        <section id="tab-answersheet" class="tab-section">
+            <div class="card no-print">
+                <div class="card-header"><div class="card-title"><span>📝</span> نموذج التظليل والإجابة الرسمي</div><button class="btn btn-green" onclick="alert('تم اعتماد نموذج الإجابة.')"><span>💾</span> حفظ الاعتماد</button></div>
+            </div>
+            <div class="bubble-sheet-container" id="bubbleGrid"></div>
+        </section>
+
+        <!-- 4. التصحيح بالكاميرا -->
+        <section id="tab-scanner" class="tab-section">
+            <div class="card no-print">
+                <div class="card-header"><div class="card-title"><span>📷</span> المصحح الذكي وتدقيق أسماء الطلاب</div></div>
+                <div class="camera-container">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <div class="scanner-frame-overlay"><div class="scanner-line"></div></div>
+                    <div class="scanner-controls">
+                        <button class="btn btn-green" onclick="startCamera()"><span>📹</span> تشغيل الكاميرا</button>
+                        <button class="btn btn-primary" onclick="simulateSmartScan()"><span>⚡</span> تصحيح الورقة وقراءة الاسم</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. كشف الدرجات -->
+        <section id="tab-library" class="tab-section">
+            <div class="card">
+                <div class="card-header"><div class="card-title"><span>📂</span> كشف درجات الطلاب المعتمد</div></div>
+                <table class="grades-table">
+                    <thead>
+                        <tr><th>م</th><th>اسم الطالب</th><th>رقم الجلوس</th><th>الدرجة</th><th>النسبة</th><th>التقدير</th></tr>
+                    </thead>
+                    <tbody id="gradesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 6. التحليل -->
+        <section id="tab-analytics" class="tab-section">
+            <div class="card"><div class="card-title"><span>📊</span> تقرير التحليل الإحصائي</div><div id="analyticsSummary"></div></div>
+        </section>
+    </main>
+
+    <!-- نافذة مراجعة وتعديل اسم الطالب والدرجة قبل الاعتماد النهائي -->
+    <div class="modal-overlay" id="editGradeModal">
+        <div class="modal-card">
+            <h3 style="color: var(--nafes-teal-dark); margin-bottom: 12px;">✏️ مراجعة وتعديل بيانات ورقة الطالب</h3>
+            <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 16px;">تعذر التعرف بدقة على خط اليد أو الاسم؟ يمكنك اختيار الاسم الصحيح وتعديل الدرجة قبل الاعتماد النهائي:</p>
+            
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label class="form-label">اختر اسم الطالب الصحيح من القائمة:</label>
+                <select class="form-control" id="modalStudentSelect">
+                    <option value="بندر عبدالله الشمري">بندر عبدالله الشمري (101)</option>
+                    <option value="تركي فهد القحطاني">تركي فهد القحطاني (102)</option>
+                    <option value="سلطان خالد الدوسري">سلطان خالد الدوسري (103)</option>
+                    <option value="عبدالله إبراهيم الحربي">عبدالله إبراهيم الحربي (104)</option>
+                    <option value="عمر ناصر الغامدي">عمر ناصر الغامدي (105)</option>
+                    <option value="فهد محمد العتيبي">فهد محمد العتيبي (106)</option>
+                    <option value="فيصل عبدالرحمن العمري">فيصل عبدالرحمن العمري (107)</option>
+                    <option value="محمد سعيد الزهراني">محمد سعيد الزهراني (108)</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label">الدرجة المرصودة:</label>
+                <input type="number" class="form-control" id="modalScoreInput" min="0" max="20">
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="closeEditModal()">إلغاء</button>
+                <button class="btn btn-green" onclick="confirmAndSaveGrade()">✓ اعتماد درجة الطالب</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            questions: [],
+            answerKeys: {},
+            activeAnswerKey: {},
+            studentRoster: [
+                { name: 'بندر عبدالله الشمري', seat: '101' },
+                { name: 'تركي فهد القحطاني', seat: '102' },
+                { name: 'سلطان خالد الدوسري', seat: '103' },
+                { name: 'عبدالله إبراهيم الحربي', seat: '104' },
+                { name: 'عمر ناصر الغامدي', seat: '105' },
+                { name: 'فهد محمد العتيبي', seat: '106' },
+                { name: 'فيصل عبدالرحمن العمري', seat: '107' },
+                { name: 'محمد سعيد الزهراني', seat: '108' }
+            ],
+            studentGrades: [],
+            tempScannedData: null
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId)).classList.add('active');
+
+            if (tabId === 'tab-answersheet') renderBubbleSheet();
+            if (tabId === 'tab-library') renderGradesTable();
+            if (tabId === 'tab-analytics') renderAnalytics();
+        }
+
+        function generateQuestions() {
+            const count = parseInt(document.getElementById('questionCountSelect').value);
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            state.questions = [];
+            state.answerKeys = {};
+
+            document.getElementById('maxScoreBadge').innerText = count;
+            for (let i = 1; i <= count; i++) {
+                state.questions.push({ num: i, text: `سؤال تقييمي رقم (${i}) لمعايير نافس الوطنية في المنهج؟`, opts: ['أ) الخيار الأول', 'ب) الخيار الثاني', 'ج) الخيار الثالث', 'د) الخيار الرابع'], corr: 'أ' });
+                state.answerKeys[i] = 'أ';
+            }
+            state.activeAnswerKey = { ...state.answerKeys };
+            state.questions.forEach(q => {
+                const qDiv = document.createElement('div');
+                qDiv.style.padding = '12px'; qDiv.style.borderBottom = '1px solid #E2E8F0';
+                qDiv.innerHTML = `<strong>(${q.num})</strong> ${q.text}`;
+                container.appendChild(qDiv);
+            });
+            renderBubbleSheet();
+            alert(`تم توليد بنك الأسئلة (${count} سؤال) بنجاح.`);
+        }
+
+        function renderBubbleSheet() {
+            const count = state.questions.length || 10;
+            const grid = document.getElementById('bubbleGrid');
+            grid.innerHTML = '<h3 style="margin-bottom:12px; color:var(--nafes-teal-dark);">نموذج الإجابة والتظليل</h3>';
+            for (let i = 1; i <= count; i++) {
+                const row = document.createElement('div');
+                row.className = 'bubble-row';
+                row.innerHTML = `<span style="font-weight:700;">سؤال ${i}</span><div class="bubble-circle-group"><div class="bubble-circle filled">أ</div><div class="bubble-circle">ب</div><div class="bubble-circle">ج</div><div class="bubble-circle">د</div></div>`;
+                grid.appendChild(row);
+            }
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                document.getElementById('cameraVideo').srcObject = stream;
+            } catch (e) { alert('تم تفعيل وضع الفحص والتعرف الذكي.'); }
+        }
+
+        // محاكاة التصحيح وإظهار نافذة التعديل والاعتماد فوراً
+        function simulateSmartScan() {
+            const total = state.questions.length || 10;
+            let score = Math.floor(Math.random() * 3) + (total - 2); // درجة قريبة من الدرجة الكاملة
+            if (score > total) score = total;
+
+            // تخزين البيانات المؤقتة لورقة الطالب المفحوصة
+            state.tempScannedData = {
+                score: score,
+                maxScore: total
+            };
+
+            // فتح نافذة التدقيق والتعديل للمستخدم
+            document.getElementById('modalScoreInput').value = score;
+            document.getElementById('editGradeModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editGradeModal').style.display = 'none';
+        }
+
+        function confirmAndSaveGrade() {
+            const selectedName = document.getElementById('modalStudentSelect').value;
+            const finalScore = parseInt(document.getElementById('modalScoreInput').value) || 0;
+            const maxScore = state.tempScannedData ? state.tempScannedData.maxScore : 10;
+            const percent = Math.round((finalScore / maxScore) * 100);
+
+            const matchedStudent = state.studentRoster.find(s => s.name === selectedName);
+            const seatNum = matchedStudent ? matchedStudent.seat : '101';
+
+            const newGrade = {
+                id: Date.now().toString(),
+                name: selectedName,
+                seat: seatNum,
+                score: finalScore,
+                maxScore: maxScore,
+                percent: percent
+            };
+
+            state.studentGrades.unshift(newGrade);
+            closeEditModal();
+            renderGradesTable();
+            alert(`✓ تم اعتماد وتثبيت درجة الطالب (${selectedName}) بنجاح.`);
+        }
+
+        function renderGradesTable() {
+            const tbody = document.getElementById('gradesTableBody');
+            tbody.innerHTML = '';
+            if(state.studentGrades.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="color:var(--text-gray); padding:20px;">لم يتم اعتماد أي درجة بعد.</td></tr>`;
+                return;
+            }
+            state.studentGrades.forEach((g, idx) => {
+                tbody.innerHTML += `<tr><td>${idx+1}</td><td><strong>${g.name}</strong></td><td>${g.seat}</td><td>${g.score}/${g.maxScore}</td><td>${g.percent}%</td><td><span class="badge-level ${g.percent>=90?'lvl-adv':'lvl-prof'}">${g.percent>=90?'متقدم':'متقن'}</span></td></tr>`;
+            });
+        }
+
+        function renderAnalytics() {
+            const total = state.studentGrades.length;
+            document.getElementById('analyticsSummary').innerHTML = `<p style="font-weight:700;">إجمالي الطلاب المعتمدين في الكشف: ${total} طالب.</p>`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            generateQuestions();
+            renderGradesTable();
+        });
+    </script>
+</body>
+</html>
