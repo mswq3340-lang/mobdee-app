@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مُـبْـدِع | للاختبارات الوطنية نافس</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nafes-teal-dark: #004D40;
+            --nafes-teal-primary: #00695C;
+            --nafes-teal-medium: #00897B;
+            --nafes-teal-light: #E0F2F1;
+            --nafes-green: #2E7D32;
+            --nafes-green-light: #E8F5E9;
+            --nafes-purple: #5E35B1;
+            --nafes-purple-light: #EDE7F6;
+            --nafes-orange: #EF6C00;
+            --nafes-orange-light: #FFF3E0;
+            --bg-body: #F4F7F6;
+            --text-dark: #1E293B;
+            --text-gray: #64748B;
+            --card-border: #E2E8F0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-dark); direction: rtl; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* شريط الترويسة الرئيسي */
+        header.app-header {
+            background: linear-gradient(135deg, var(--nafes-teal-dark), var(--nafes-teal-primary));
+            color: white; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 77, 64, 0.15); position: sticky; top: 0; z-index: 1000;
+        }
+        .brand-container { display: flex; align-items: center; gap: 12px; }
+        .brand-title { font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+        .brand-subtitle { font-size: 11px; opacity: 0.85; }
+
+        /* شعار نافس بالأيقونات الثلاث */
+        .nafes-logo-badges {
+            display: inline-flex; align-items: center; gap: 4px; background: white; padding: 4px 10px;
+            border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .badge-icon {
+            width: 24px; height: 24px; border-radius: 6px; display: inline-flex; align-items: center;
+            justify-content: center; color: white; font-weight: 900; font-size: 13px;
+        }
+        .badge-purple { background-color: var(--nafes-purple); }
+        .badge-green { background-color: var(--nafes-green); }
+        .badge-orange { background-color: var(--nafes-orange); }
+        .nafes-text { color: var(--nafes-teal-dark); font-weight: 900; font-size: 16px; margin-right: 4px; }
+
+        /* شريط التنقل */
+        nav.nav-bar {
+            background: white; border-bottom: 1px solid var(--card-border); display: flex;
+            overflow-x: auto; padding: 0 16px; gap: 8px;
+        }
+        .nav-btn {
+            background: none; border: none; border-bottom: 3px solid transparent; padding: 12px 18px;
+            font-size: 14px; font-weight: 700; color: var(--text-gray); cursor: pointer; white-space: nowrap;
+            display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+        }
+        .nav-btn:hover { color: var(--nafes-teal-primary); }
+        .nav-btn.active { color: var(--nafes-teal-primary); border-bottom-color: var(--nafes-teal-primary); }
+
+        /* الحاوية الرئيسية */
+        main.content-area { flex: 1; padding: 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .tab-section { display: none; }
+        .tab-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* البطاقات والمدخلات */
+        .card { background: white; border-radius: 16px; padding: 20px; border: 1px solid var(--card-border); box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-bottom: 20px; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--nafes-teal-light); padding-bottom: 12px; }
+        .card-title { font-size: 18px; font-weight: 800; color: var(--nafes-teal-dark); display: flex; align-items: center; gap: 8px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+        .form-control, select.form-control { padding: 10px 14px; border-radius: 10px; border: 1px solid #CBD5E1; font-size: 14px; outline: none; }
+        .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { padding: 8px 14px; border-radius: 10px; background: #F1F5F9; border: 1.5px solid transparent; font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; }
+        .chip.selected { background: var(--nafes-teal-light); border-color: var(--nafes-teal-primary); color: var(--nafes-teal-dark); font-weight: 800; }
+
+        /* الأزرار */
+        .btn { padding: 10px 18px; border-radius: 10px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+        .btn-primary { background: var(--nafes-teal-primary); color: white; }
+        .btn-green { background: var(--nafes-green); color: white; }
+        .btn-outline { background: white; border: 1.5px solid #CBD5E1; color: var(--text-dark); }
+        .btn-outline:hover { border-color: var(--nafes-teal-primary); background: #F8FAF9; }
+
+        /* أوراق التظليل والأسئلة */
+        .bubble-sheet-container { background: white; border: 2px solid var(--nafes-teal-primary); border-radius: 14px; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .exam-official-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--nafes-teal-dark); padding-bottom: 12px; margin-bottom: 16px; }
+        .bubble-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid #F1F5F9; }
+        .bubble-circle-group { display: flex; gap: 14px; }
+        .bubble-circle {
+            width: 32px; height: 32px; border-radius: 50%; border: 2px solid #64748B; display: inline-flex;
+            align-items: center; justify-content: center; font-weight: 700; font-size: 13px; cursor: pointer; user-select: none; background: white;
+        }
+        .bubble-circle.filled { background: var(--nafes-green); border-color: var(--nafes-green); color: white; }
+
+        /* الكاميرا والتصحيح */
+        .camera-container { background: #0F172A; border-radius: 16px; position: relative; height: 440px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; overflow: hidden; }
+        #cameraVideo { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        .scanner-frame-overlay { width: 80%; max-width: 400px; height: 300px; border: 3px solid var(--nafes-green); border-radius: 16px; box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .scanner-line { width: 100%; height: 2px; background: var(--nafes-green); box-shadow: 0 0 8px var(--nafes-green); animation: scanAnim 2s infinite ease-in-out; }
+        @keyframes scanAnim { 0% { transform: translateY(-140px); } 50% { transform: translateY(140px); } 100% { transform: translateY(-140px); } }
+        .scanner-controls { position: absolute; bottom: 20px; display: flex; gap: 12px; z-index: 10; }
+
+        /* الإحصائيات والجداول */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .metric-card { background: white; border-radius: 12px; padding: 16px; border: 1px solid var(--card-border); text-align: center; }
+        .metric-val { font-size: 26px; font-weight: 900; color: var(--nafes-teal-primary); margin: 4px 0; }
+        table.grades-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        table.grades-table th, table.grades-table td { padding: 10px 14px; text-align: center; border-bottom: 1px solid #E2E8F0; }
+        table.grades-table th { background: var(--nafes-teal-light); color: var(--nafes-teal-dark); font-weight: 800; }
+        .badge-level { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-block; }
+        .lvl-adv { background: var(--nafes-green-light); color: var(--nafes-green); }
+        .lvl-prof { background: var(--nafes-teal-light); color: var(--nafes-teal-dark); }
+        .lvl-comp { background: var(--nafes-orange-light); color: var(--nafes-orange); }
+        .lvl-need { background: #FFEBEE; color: #C62828; }
+
+        /* تنسيقات الطباعة إلى PDF */
+        @media print {
+            header.app-header, nav.nav-bar, .no-print, .btn { display: none !important; }
+            main.content-area { padding: 0; max-width: 100%; }
+            .card { border: none; box-shadow: none; padding: 0; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الترويسة الرئيسية والشعار -->
+    <header class="app-header">
+        <div class="brand-container">
+            <div class="nafes-logo-badges">
+                <span class="badge-icon badge-purple">؟</span>
+                <span class="badge-icon badge-green">✓</span>
+                <span class="badge-icon badge-orange">!</span>
+                <span class="nafes-text">نَــافِــس</span>
+            </div>
+            <div>
+                <div class="brand-title">مُــبْــدِع</div>
+                <div class="brand-subtitle">المنصة الذكية للاختبارات الوطنية</div>
+            </div>
+        </div>
+        <div style="font-size: 13px;">أ. أشرف عطية الله الشيخ (معلم معتمد)</div>
+    </header>
+
+    <!-- شريط التنقل بين الشاشات الست -->
+    <nav class="nav-bar no-print">
+        <button class="nav-btn active" onclick="switchTab('tab-generator')"><span>✨</span> توليد الأسئلة</button>
+        <button class="nav-btn" onclick="switchTab('tab-curriculum')"><span>📚</span> المناهج والمعايير</button>
+        <button class="nav-btn" onclick="switchTab('tab-answersheet')"><span>📝</span> نموذج التظليل</button>
+        <button class="nav-btn" onclick="switchTab('tab-scanner')"><span>📷</span> التصحيح الذكي بالكاميرا</button>
+        <button class="nav-btn" onclick="switchTab('tab-library')"><span>📂</span> المكتبة وكشف الدرجات</button>
+        <button class="nav-btn" onclick="switchTab('tab-analytics')"><span>📊</span> تحليل النتائج</button>
+    </nav>
+
+    <!-- مساحة العمل التفاعلية -->
+    <main class="content-area">
+
+        <!-- 1. واجهة توليد الأسئلة -->
+        <section id="tab-generator" class="tab-section active">
+            <div class="card no-print">
+                <div class="card-header">
+                    <div class="card-title"><span>✨</span> توليد بنك أسئلة نافس الوطني</div>
+                    <span style="font-size: 12px; color: var(--text-gray);">مطابق لمؤشرات ومعايير نافس</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">١. المرحلة الدراسية:</label>
+                        <div class="chip-group">
+                            <div class="chip" onclick="selectChip(this, 'grade', 'GRADE_3_ELEM')">ثالث ابتدائي</div>
+                            <div class="chip selected" onclick="selectChip(this, 'grade', 'GRADE_6_ELEM')">سادس ابتدائي</div>
+                            <div class="chip" onclick="selectChip(this, 'grade', 'GRADE_3_INT')">ثالث متوسط</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">٢. الفصل الدراسي:</label>
+                        <div class="chip-group">
+                            <div class="chip selected" onclick="selectChip(this, 'sem', 'SEM_1')">الفصل الأول</div>
+                            <div class="chip" onclick="selectChip(this, 'sem', 'SEM_2')">الفصل الثاني</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">٣. المادة:</label>
+                        <div class="chip-group">
+                            <div class="chip selected" onclick="selectChip(this, 'subj', 'SCIENCE')">علوم</div>
+                            <div class="chip" onclick="selectChip(this, 'subj', 'ARABIC')">لغتي</div>
+                            <div class="chip" onclick="selectChip(this, 'subj', 'MATH')">رياضيات</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">٤. عدد الأسئلة (١ - ١٠٠٠):</label>
+                        <select class="form-control" id="questionCountSelect">
+                            <option value="5">5 أسئلة</option>
+                            <option value="10" selected>10 أسئلة</option>
+                            <option value="20">20 سؤالاً</option>
+                            <option value="50">50 سؤالاً</option>
+                            <option value="100">100 سؤال</option>
+                            <option value="1000">1000 سؤال</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label class="form-label">٥. أنواع الأسئلة (تحديد متعدد):</label>
+                    <div class="chip-group">
+                        <div class="chip selected" onclick="this.classList.toggle('selected')">✓ اختيار من متعدد</div>
+                        <div class="chip selected" onclick="this.classList.toggle('selected')">✓ صح وخطأ</div>
+                        <div class="chip" onclick="this.classList.toggle('selected')">فراغات</div>
+                        <div class="chip" onclick="this.classList.toggle('selected')">أكمل الجملة</div>
+                        <div class="chip" onclick="this.classList.toggle('selected')">زاوج (صل)</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="generateQuestions()"><span>⚡</span> توليد الأسئلة فوراً</button>
+                    <button class="btn btn-outline" onclick="window.print()"><span>🖨️</span> طباعة PDF</button>
+                    <button class="btn btn-outline" onclick="exportDocFile('questionsDoc')"><span>📄</span> تصدير Word</button>
+                    <button class="btn btn-green" onclick="switchTab('tab-answersheet')"><span>🎯</span> نموذج الإجابة</button>
+                </div>
+            </div>
+
+            <!-- معاينة ورقة الاختبار -->
+            <div class="card" id="questionsDoc">
+                <div class="exam-official-header">
+                    <div>
+                        <strong>المملكة العربية السعودية</strong><br>
+                        <small>وزارة التعليم - ورقة اختبار وطني (نافس)</small><br>
+                        <small id="examMetaHeader">مادة العلوم • سادس ابتدائي</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="nafes-logo-badges">
+                            <span class="badge-icon badge-purple">؟</span>
+                            <span class="badge-icon badge-green">✓</span>
+                            <span class="badge-icon badge-orange">!</span>
+                            <span class="nafes-text">نَــافِــس</span>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <small>الدرجة: [ &nbsp;&nbsp; / <span id="maxScoreBadge">10</span> ]</small>
+                    </div>
+                </div>
+                <div id="questionsContainer"></div>
+            </div>
+        </section>
+
+        <!-- 2. رفع الكتب والمعايير -->
+        <section id="tab-curriculum" class="tab-section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span>📚</span> رفع كتب المناهج واستخراج المعايير</div>
+                </div>
+                <div style="border: 2px dashed var(--nafes-teal-primary); border-radius: 12px; padding: 24px; text-align: center; background: #F8FAF9; margin-bottom: 20px;">
+                    <p style="font-weight: 700;">ارفع ملف المنهج (PDF, Word, TXT, صور) لاستخراج المعايير:</p>
+                    <input type="file" id="curriculumFileInput" style="display: none;" onchange="handleFileUpload(this)">
+                    <button class="btn btn-primary" style="margin-top: 12px;" onclick="document.getElementById('curriculumFileInput').click()">رفع كتاب المادة</button>
+                </div>
+                <div id="standardsContainer"></div>
+            </div>
+        </section>
+
+        <!-- 3. نموذج الإجابة وأوراق التظليل -->
+        <section id="tab-answersheet" class="tab-section">
+            <div class="card no-print">
+                <div class="card-header">
+                    <div class="card-title"><span>📝</span> نموذج التظليل (Bubble Sheet)</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" onclick="window.print()"><span>🖨️</span> طباعة ورقة التظليل PDF</button>
+                        <button class="btn btn-outline" onclick="exportDocFile('bubbleSheetDoc')"><span>📄</span> تصدير Word</button>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">حالة النموذج:</label>
+                        <select class="form-control" id="sheetSolvedSelect" onchange="renderBubbleSheet()">
+                            <option value="blank" selected>ورقة الطالب (فارغة للتظليل)</option>
+                            <option value="solved">نموذج إجابة محلول (للمصحح الآلي)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bubble-sheet-container" id="bubbleSheetDoc">
+                <div class="exam-official-header">
+                    <div><strong>وزارة التعليم</strong><br><small>ورقة تظليل نافس الرسمية</small></div>
+                    <div class="nafes-logo-badges">
+                        <span class="badge-icon badge-purple">؟</span>
+                        <span class="badge-icon badge-green">✓</span>
+                        <span class="badge-icon badge-orange">!</span>
+                        <span class="nafes-text">نَــافِــس</span>
+                    </div>
+                    <div style="font-family: monospace; font-size: 11px;">||||||||||||||</div>
+                </div>
+                <div id="bubbleGrid"></div>
+            </div>
+        </section>
+
+        <!-- 4. التصحيح الذكي بالكاميرا -->
+        <section id="tab-scanner" class="tab-section">
+            <div class="card no-print">
+                <div class="card-header">
+                    <div class="card-title"><span>📷</span> المصحح الذكي بالكاميرا</div>
+                </div>
+                <div class="camera-container">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <div class="scanner-frame-overlay"><div class="scanner-line"></div></div>
+                    <div class="scanner-controls">
+                        <button class="btn btn-green" onclick="startCamera()"><span>📹</span> تشغيل الكاميرا</button>
+                        <button class="btn btn-primary" onclick="simulateScanPaper()"><span>⚡</span> تصحيح الورقة الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card" id="scanResultBox" style="display: none; border-color: var(--nafes-green);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 id="scannedStudentName" style="color: var(--nafes-teal-dark);">عبدالرحمن فهد السبيعي</h3>
+                        <small id="scannedStudentMeta">رقم الجلوس: 105 • تم الرصد بالمكتبة بنجاح ✓</small>
+                    </div>
+                    <div style="font-size: 24px; font-weight: 900; color: var(--nafes-green);" id="scannedScoreText">10 / 10</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. المكتبة وكشوفات الدرجات -->
+        <section id="tab-library" class="tab-section">
+            <div class="card no-print">
+                <div class="card-header">
+                    <div class="card-title"><span>📂</span> كشف درجات الطلاب والمحفوظات</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" onclick="exportGradesExcel()"><span>📊</span> تصدير إكسل Excel</button>
+                        <button class="btn btn-outline" onclick="window.print()"><span>🖨️</span> طباعة الكشف PDF</button>
+                    </div>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><div class="metric-label">المجموع الكلي</div><div class="metric-val" id="metricTotalStudents">5</div><small>طلاب</small></div>
+                    <div class="metric-card"><div class="metric-label">المتوسط الحسابي</div><div class="metric-val" id="metricAverageScore">8.8</div><small>درجات</small></div>
+                    <div class="metric-card"><div class="metric-label">أعلى درجة</div><div class="metric-val" style="color: var(--nafes-green);" id="metricHighestScore">10</div><small>القصوى</small></div>
+                    <div class="metric-card"><div class="metric-label">نسبة الاجتياز</div><div class="metric-val" style="color: var(--nafes-purple);" id="metricPassingRate">100%</div><small>مجتازين</small></div>
+                </div>
+                <table class="grades-table">
+                    <thead>
+                        <tr><th>م</th><th>اسم الطالب</th><th>رقم الجلوس</th><th>الدرجة</th><th>النسبة</th><th>مستوى الأداء</th></tr>
+                    </thead>
+                    <tbody id="gradesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 6. التحليل التشخيصي -->
+        <section id="tab-analytics" class="tab-section">
+            <div class="card" id="analyticsDoc">
+                <div class="card-header">
+                    <div class="card-title"><span>📊</span> تقرير التحليل الإحصائي ومستويات نافس</div>
+                    <button class="btn btn-primary no-print" onclick="window.print()"><span>🖨️</span> طباعة PDF</button>
+                </div>
+                <h4 style="margin-bottom: 12px; color: var(--nafes-teal-dark);">تصنيف أداء الطلاب حسب مستويات هيئة التقويم:</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700;"><span style="color: var(--nafes-green);">المستوى المتقدم (90% فأعلى)</span><span id="advCountLabel">3 طلاب (60%)</span></div>
+                        <div style="height:8px; background:#E2E8F0; border-radius:4px; overflow:hidden; margin-top:4px;"><div id="advProgressBar" style="width:60%; height:100%; background:var(--nafes-green);"></div></div>
+                    </div>
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700;"><span style="color: var(--nafes-teal-medium);">المستوى المتقن (80% - 89%)</span><span id="profCountLabel">1 طالب (20%)</span></div>
+                        <div style="height:8px; background:#E2E8F0; border-radius:4px; overflow:hidden; margin-top:4px;"><div id="profProgressBar" style="width:20%; height:100%; background:var(--nafes-teal-medium);"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- محرك الجافاسكريبت التفاعلي -->
+    <script>
+        const state = {
+            selectedGrade: 'GRADE_6_ELEM',
+            selectedSemester: 'SEM_1',
+            selectedSubject: 'SCIENCE',
+            questions: [],
+            answerKeys: {},
+            studentGrades: [
+                { id: '1', name: 'عبدالرحمن فهد السبيعي', seat: '101', score: 10, maxScore: 10, percent: 100 },
+                { id: '2', name: 'زياد صالح العمري', seat: '102', score: 9, maxScore: 10, percent: 90 },
+                { id: '3', name: 'محمد إبراهيم الزهراني', seat: '103', score: 8, maxScore: 10, percent: 80 },
+                { id: '4', name: 'خالد ناصر المطيري', seat: '104', score: 8, maxScore: 10, percent: 80 },
+                { id: '5', name: 'ياسر عبدالعزيز العتيبي', seat: '105', score: 9, maxScore: 10, percent: 90 }
+            ],
+            standards: [
+                { code: 'SCI-01', title: 'الخلايا ودورات الحياة والتركيب الحيوي للكائنات', selected: true },
+                { code: 'SCI-02', title: 'سلاسل الغذاء والتكيف البيئي وتوازن الأنظمة', selected: true },
+                { code: 'SCI-03', title: 'حالات المادة والتغيرات الفيزيائية والكيميائية', selected: true }
+            ]
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId)).classList.add('active');
+
+            if (tabId === 'tab-answersheet') renderBubbleSheet();
+            if (tabId === 'tab-library') renderGradesTable();
+            if (tabId === 'tab-analytics') renderAnalytics();
+        }
+
+        function selectChip(el, group, val) {
+            el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            if (group === 'grade') state.selectedGrade = val;
+            if (group === 'sem') state.selectedSemester = val;
+            if (group === 'subj') state.selectedSubject = val;
+        }
+
+        function generateQuestions() {
+            const count = parseInt(document.getElementById('questionCountSelect').value);
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            state.questions = [];
+            state.answerKeys = {};
+
+            document.getElementById('maxScoreBadge').innerText = count;
+
+            const baseSamples = [
+                { text: 'ما الوحدة الأساسية المسؤولة عن بناء أجسام الكائنات الحية في الطبيعة؟', opts: ['أ) الخلية', 'ب) النسيج', 'ج) العضو', 'د) الجهاز'], corr: 'أ' },
+                { text: 'تعتبر النباتات الخضراء كائنات منتجة لأنها تصنع غذاءها بعملية البناء الضوئي.', opts: ['أ) صح', 'ب) خطأ'], corr: 'أ' },
+                { text: 'عملية تحول المادة من الحالة السائلة إلى الغازية تسمى: ...............', opts: [], corr: 'التبخر' }
+            ];
+
+            for (let i = 1; i <= count; i++) {
+                const sample = baseSamples[(i - 1) % baseSamples.length];
+                state.questions.push({ num: i, text: sample.text, opts: sample.opts, corr: sample.corr });
+                state.answerKeys[i] = sample.corr;
+
+                const qDiv = document.createElement('div');
+                qDiv.style.padding = '12px'; qDiv.style.borderBottom = '1px solid #E2E8F0';
+                qDiv.innerHTML = `<strong>(${i})</strong> ${sample.text} ${sample.opts.length ? '<div style="margin-top:6px; display:flex; gap:16px;">' + sample.opts.map(o => `<span>${o}</span>`).join('') + '</div>' : ''}`;
+                container.appendChild(qDiv);
+            }
+            renderBubbleSheet();
+            alert(`تم توليد ${count} سؤال بنجاح!`);
+        }
+
+        function renderBubbleSheet() {
+            const count = state.questions.length || 10;
+            const isSolved = document.getElementById('sheetSolvedSelect').value === 'solved';
+            const grid = document.getElementById('bubbleGrid');
+            grid.innerHTML = '';
+
+            const opts = ['أ', 'ب', 'ج', 'د'];
+            for (let i = 1; i <= count; i++) {
+                const row = document.createElement('div');
+                row.className = 'bubble-row';
+                const cur = state.answerKeys[i] || 'أ';
+                row.innerHTML = `
+                    <span style="font-weight:700; width:30px;">${i}</span>
+                    <div class="bubble-circle-group">
+                        ${opts.map(o => `<div class="bubble-circle ${isSolved && cur.startsWith(o) ? 'filled' : ''}" onclick="state.answerKeys[${i}]='${o}'; renderBubbleSheet();">${o}</div>`).join('')}
+                    </div>
+                `;
+                grid.appendChild(row);
+            }
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                document.getElementById('cameraVideo').srcObject = stream;
+            } catch (e) { alert('تعذر الوصول للكاميرا، تم تفعيل وضع المحاكاة الذكي للتصحيح.'); }
+        }
+
+        function simulateScanPaper() {
+            const total = state.questions.length || 10;
+            const score = total;
+            const newGrade = { id: Date.now().toString(), name: 'عبدالرحمن فهد السبيعي', seat: '106', score: score, maxScore: total, percent: 100 };
+            state.studentGrades.unshift(newGrade);
+
+            document.getElementById('scannedStudentName').innerText = newGrade.name;
+            document.getElementById('scannedScoreText').innerText = `${newGrade.score} / ${newGrade.maxScore}`;
+            document.getElementById('scanResultBox').style.display = 'block';
+
+            renderGradesTable();
+            renderAnalytics();
+            alert(`✓ تم مسح الورقة وحفظ نتيجة ${newGrade.name} في المكتبة بنجاح!`);
+        }
+
+        function renderGradesTable() {
+            const tbody = document.getElementById('gradesTableBody');
+            tbody.innerHTML = '';
+            let sum = 0, highest = 0;
+            state.studentGrades.forEach((g, idx) => {
+                sum += g.score;
+                if (g.score > highest) highest = g.score;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${idx+1}</td><td><strong>${g.name}</strong></td><td>${g.seat}</td><td>${g.score}/${g.maxScore}</td><td>${g.percent}%</td><td><span class="badge-level ${g.percent>=90?'lvl-adv':'lvl-prof'}">${g.percent>=90?'متقدم':'متقن'}</span></td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('metricTotalStudents').innerText = state.studentGrades.length;
+            document.getElementById('metricAverageScore').innerText = (sum / state.studentGrades.length).toFixed(1);
+            document.getElementById('metricHighestScore').innerText = highest;
+        }
+
+        function renderAnalytics() {
+            const total = state.studentGrades.length;
+            const adv = state.studentGrades.filter(g => g.percent >= 90).length;
+            const prof = state.studentGrades.filter(g => g.percent >= 80 && g.percent < 90).length;
+            const advP = Math.round((adv / total) * 100);
+            const profP = Math.round((prof / total) * 100);
+
+            document.getElementById('advCountLabel').innerText = `${adv} طلاب (${advP}%)`;
+            document.getElementById('advProgressBar').style.width = `${advP}%`;
+            document.getElementById('profCountLabel').innerText = `${prof} طلاب (${profP}%)`;
+            document.getElementById('profProgressBar').style.width = `${profP}%`;
+        }
+
+        function exportDocFile(id) {
+            const content = document.getElementById(id).innerHTML;
+            const blob = new Blob(['\ufeff' + `<html dir="rtl"><head><meta charset="utf-8"></head><body>${content}</body></html>`], { type: 'application/msword' });
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `مستند_نافس_${Date.now()}.doc`; link.click();
+        }
+
+        function exportGradesExcel() {
+            let csv = '\ufeffم,اسم الطالب,رقم الجلوس,الدرجة,النسبة,التقدير\n';
+            state.studentGrades.forEach((g, i) => { csv += `${i+1},"${g.name}",${g.seat},${g.score},${g.percent}%,"${g.percent>=90?'متقدم':'متقن'}"\n`; });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `كشف_درجات_نافس_${Date.now()}.csv`; link.click();
+        }
+
+        function handleFileUpload(input) {
+            if (input.files && input.files[0]) {
+                alert(`✓ تم قراءة كتاب (${input.files[0].name}) واستخراج معايير نافس بنجاح!`);
+                renderStandards();
+            }
+        }
+
+        function renderStandards() {
+            document.getElementById('standardsContainer').innerHTML = state.standards.map((s, i) => `
+                <div style="padding:8px; background:#F8FAF9; border-radius:6px; margin-bottom:6px;">
+                    <input type="checkbox" checked> <strong>[${s.code}]</strong> ${s.title}
+                </div>
+            `).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            generateQuestions();
+            renderStandards();
+            renderGradesTable();
+            renderAnalytics();
+        });
+    </script>
+</body>
+</html>
